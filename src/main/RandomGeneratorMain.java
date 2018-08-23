@@ -1,4 +1,4 @@
-/*	Copyright 2018 Philip Klein
+/* Copyright 2018 Philip Klein
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -12,26 +12,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+package main;
+
+import gui.RandomGeneratorOptionsGUI;
+
 public class RandomGeneratorMain {
 	
 	public static final String VERSION = "0.1";
 	public static final String TITLE = "Random Password Generator " + VERSION;
 	
-	private static volatile RandomGeneratorOptionsGUI optionsGUI;
-	private static volatile RandomGeneratorOptionsThread optionsThread;
-	
 	public static void main(String[] args) {
-		Thread option;
 		
-		optionsGUI = new RandomGeneratorOptionsGUI();
-		optionsThread = new RandomGeneratorOptionsThread();
-		optionsThread.setGUI(optionsGUI);
-		option = new Thread(optionsThread);
+		new RandomGeneratorOptionsGUI();
 		
-		//TODO: finish setup
-		
-		
-		option.start();
 	}
 
 }

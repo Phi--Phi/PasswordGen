@@ -1,4 +1,4 @@
-/*	Copyright 2018 Philip Klein
+/* Copyright 2018 Philip Klein
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -12,6 +12,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
+package gui;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -22,8 +25,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,12 +32,14 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import exception.CharactersBoundsException;
+import main.RandomGeneratorMain;
 
 public class RandomGeneratorOptionsGUI extends JFrame {
 
@@ -48,29 +51,30 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	private JButton increment, decrement, submit;
 	private JTextArea characters;
 	private JPanel panel, numberOfChars, options;
+	private JCheckBox lower, upper, number, special;
 	private int chars = 6;
 	
+	private PasswordGeneratorGUI pgen;
+	
 	public RandomGeneratorOptionsGUI() throws HeadlessException {
-		Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
-		panel = new JPanel();
-		//hide window when closed
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				setVisible(false);
-			}
-		});
 		
+		Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
+		panel      = new JPanel();
+		pgen       = new PasswordGeneratorGUI(this);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle(RandomGeneratorMain.TITLE);
-		setMinimumSize(new Dimension(320,10));
+		setMinimumSize(new Dimension(380,10));
 	    setIconImage(icon);
 		setupPanel();
 		add(panel);
 		pack();
+		setVisible(true);
+		
 	}
 	
 	private void setupPanel() {
+		
 		setupNumberOfCharacters();
 		setupOptions();
 		submit = new JButton("Generate");
@@ -92,11 +96,10 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		panel.add(options);
 		panel.add(submit);
 		
-		
 	}
 	
 	private void setupOptions() {
-		JCheckBox lower, upper, number, special;
+		
 		lower 	= new JCheckBox("Lowercase letters");
 		upper 	= new JCheckBox("Uppercase letters");
 		number 	= new JCheckBox("Numeric");
@@ -110,15 +113,15 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		options.add(number);
 		options.add(special);
 		
-		
 	}
 	
 	private void setupNumberOfCharacters() {
+		
 		JLabel numberOfCharactersInPassword;
 		numberOfCharactersInPassword = new JLabel("How many characters do you want?");
 		
 		characters = new JTextArea();
-		increment = new JButton("+");
+		increment  = new JButton("+");
 		increment.addActionListener(new ActionListener() {
 
 			@Override
@@ -128,16 +131,20 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 			}
 			
 		});
-		decrement = new JButton("-");
+		decrement  = new JButton("-");
 		decrement.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				
 				try {
+					
 					decrement();
+					
 				} catch (CharactersBoundsException e) {
+					
 					Color original_background = decrement.getBackground();
-					Border b = BorderFactory.createLineBorder(Color.RED),
+					Border b                  = BorderFactory.createLineBorder(Color.RED),
 							original_border = decrement.getBorder();
 					decrement.setBackground(Color.RED);
 					decrement.setBorder(b);
@@ -148,10 +155,14 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 			}
 
 			private synchronized void shake(JButton button, Border original_border, Color original_background) {
+				
 				long delay = 75;
-				Point p = button.getLocation();
+				Point p    = button.getLocation();
+				
 				for (int i = 0; i < 30; i++) {
+					
 					try {
+						
 						//TODO execute Runnables
 						SwingUtilities.invokeLater(moveButton(button, new Point(p.x + 5, p.y)));
 						Thread.sleep(delay);
@@ -161,24 +172,35 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 						Thread.sleep(delay);
 						SwingUtilities.invokeLater(moveButton(button, p));
 						Thread.sleep(delay);
+						
 					} catch (InterruptedException ex) {
+						
 						SwingUtilities.invokeLater(moveButton(button,p));
 						button.setBorder(original_border);
 						button.setBackground(original_background);
 						return;
+						
 					}
 					button.setBorder(original_border);
 					button.setBackground(original_background);
+					
 				}
+				
 			}
 			
 			private Runnable moveButton(JButton button, final Point p) {
+				
 				return new Runnable() {
+					
 					@Override
 					public void run() {
+						
 						button.setLocation(p);
+						
 					}
+					
 				};
+				
 			}
 			
 		});
@@ -195,24 +217,72 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	
 	private void generate() {
 		
+		setVisible(false);
+		if (!lowercase() && !uppercase() && !specialCharacters() && !numbers()) {
+			
+			JOptionPane.showMessageDialog(this, "An option must be selected");
+			setVisible(true);
+			
+		} else {
+			
+			pgen.generate();
+			
+		}
+		
 	}
 	
 	private void increment() {
+		
 		chars++;
 		updateCharacters();
+		
 	}
 	
 	private void decrement() throws CharactersBoundsException {
+		
 		chars--;
 		if(chars < 6) {
 			chars++;
 			throw new CharactersBoundsException();
 		}
 		updateCharacters();
+		
 	}
 	
 	private void updateCharacters() {
+		
 		characters.setText(String.valueOf(chars));
+		
+	}
+	
+	public boolean lowercase() {
+		
+		return lower.isSelected();
+		
+	}
+	
+	public boolean uppercase() {
+		
+		return upper.isSelected();
+		
+	}
+	
+	public boolean specialCharacters() {
+		
+		return special.isSelected();
+		
+	}
+	
+	public boolean numbers() {
+		
+		return number.isSelected();
+		
+	}
+	
+	public int getNumberOfCharacters() {
+		
+		return chars;
+		
 	}
 	
 }
