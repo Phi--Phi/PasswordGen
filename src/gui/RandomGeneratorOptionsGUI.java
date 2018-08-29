@@ -64,7 +64,7 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle(RandomGeneratorMain.TITLE);
-		setMinimumSize(new Dimension(380,10));
+		setMinimumSize(new Dimension(400,10));
 	    setIconImage(icon);
 		setupPanel();
 		add(panel);
