@@ -16,17 +16,14 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,8 +32,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 import exception.CharactersBoundsException;
 import main.RandomGeneratorMain;
@@ -143,66 +138,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 					
 				} catch (CharactersBoundsException e) {
 					
-					Color original_background = decrement.getBackground();
-					Border b                  = BorderFactory.createLineBorder(Color.RED),
-							original_border = decrement.getBorder();
-					decrement.setBackground(Color.RED);
-					decrement.setBorder(b);
-					shake(decrement, original_border, original_background);
+					//TODO error message
 					
 				}
 				
-			}
-
-			private synchronized void shake(JButton button, Border original_border, Color original_background) {
-				
-				long delay = 75;
-				Point p    = button.getLocation();
-				
-				for (int i = 0; i < 30; i++) {
-					
-					try {
-						
-						//TODO execute Runnables
-						SwingUtilities.invokeLater(moveButton(button, new Point(p.x + 5, p.y)));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, p));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, new Point(p.x - 5, p.y)));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, p));
-						Thread.sleep(delay);
-						
-					} catch (InterruptedException ex) {
-						
-						SwingUtilities.invokeLater(moveButton(button,p));
-						button.setBorder(original_border);
-						button.setBackground(original_background);
-						return;
-						
-					}
-					button.setBorder(original_border);
-					button.setBackground(original_background);
-					
-				}
-				
-			}
-			
-			private Runnable moveButton(JButton button, final Point p) {
-				
-				return new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						button.setLocation(p);
-						
-					}
-					
-				};
-				
-			}
-			
+			}	
 		});
 		updateCharacters();
 		characters.setEditable(false);
