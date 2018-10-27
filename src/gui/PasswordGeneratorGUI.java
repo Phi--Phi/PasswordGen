@@ -27,7 +27,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 import main.RandomGeneratorMain;
 
@@ -40,7 +40,7 @@ public class PasswordGeneratorGUI extends JFrame {
 	
 	private JPanel panel;
 	private JButton goBack, next;
-	private JTextField password;
+	private JTextArea password;
 	
 	private RandomGeneratorOptionsGUI options;
 	
@@ -66,7 +66,7 @@ public class PasswordGeneratorGUI extends JFrame {
 		JPanel buttons = new JPanel();
 		goBack   = new JButton("Go Back");
 		next     = new JButton("Get Next Password");
-		password = new JTextField();
+		password = new JTextArea();
 		
 		password.setEditable(false);
 		goBack.addActionListener(new ActionListener() {
@@ -156,13 +156,17 @@ public class PasswordGeneratorGUI extends JFrame {
 			alphabet.add('?');
 			
 		}
-		for (int i = 0; i < options.getNumberOfCharacters(); i++) {
-			
-			sb.append(alphabet.get(rand.nextInt(alphabet.size())));
-			
+		for (int i = 0; i < options.getNumberOfPasswords(); i++) {
+			for (int j = 0; j < options.getNumberOfCharacters(); j++) {
+				
+				sb.append(alphabet.get(rand.nextInt(alphabet.size())));
+				
+			}
+			sb.append("\n");
 		}
 		password.setText(sb.toString());
 		setVisible(true);
+		pack();
 		
 	}
 	

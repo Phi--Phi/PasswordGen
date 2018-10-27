@@ -35,6 +35,7 @@ import javax.swing.JTextArea;
 
 import exception.LengthOutOfBoundsException;
 import exception.NumberOutOfBoundsException;
+import exception.OptionSelectException;
 import main.RandomGeneratorMain;
 
 /**
@@ -244,15 +245,19 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	private void generate() {
 		
 		setVisible(false);
-		if (!lowercase() && !uppercase() && !specialCharacters() && !numbers()) {
-			
+		try {
+			if (!lowercase() && !uppercase() && !specialCharacters() && !numbers()) {
+				
+				throw new OptionSelectException();
+				
+			} else {
+				
+				pgen.generate();
+				
+			}
+		}catch (OptionSelectException e) {
 			JOptionPane.showMessageDialog(this, "An option must be selected");
 			setVisible(true);
-			
-		} else {
-			
-			pgen.generate();
-			
 		}
 		
 	}
