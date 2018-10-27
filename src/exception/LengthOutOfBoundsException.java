@@ -15,7 +15,7 @@
 
 package exception;
 
-public class CharactersBoundsException extends Exception {
+public class LengthOutOfBoundsException extends Exception {
 
 	/**
 	 * 

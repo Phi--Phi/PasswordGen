@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import exception.CharactersBoundsException;
+import exception.LengthOutOfBoundsException;
 import main.RandomGeneratorMain;
 
 public class RandomGeneratorOptionsGUI extends JFrame {
@@ -136,7 +136,7 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 					
 					decrement();
 					
-				} catch (CharactersBoundsException e) {
+				} catch (LengthOutOfBoundsException e) {
 					
 					//TODO error message
 					
@@ -178,12 +178,12 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
-	private void decrement() throws CharactersBoundsException {
+	private void decrement() throws LengthOutOfBoundsException {
 		
 		chars--;
 		if(chars < 6) {
 			chars++;
-			throw new CharactersBoundsException();
+			throw new LengthOutOfBoundsException();
 		}
 		updateCharacters();
 		
