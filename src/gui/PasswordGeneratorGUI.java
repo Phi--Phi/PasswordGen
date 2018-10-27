@@ -168,6 +168,7 @@ public class PasswordGeneratorGUI extends JFrame {
 		setVisible(true);
 		pack();
 		
+		
 	}
 	
 }
