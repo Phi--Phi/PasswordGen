@@ -21,11 +21,14 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -39,8 +42,9 @@ public class PasswordGeneratorGUI extends JFrame {
 	private static final long serialVersionUID = -1442493858262690625L;
 	
 	private JPanel panel;
-	private JButton goBack, next;
+	private JButton goBack, next, saveBtn;
 	private JTextArea password;
+	
 	
 	private RandomGeneratorOptionsGUI options;
 	
@@ -67,10 +71,10 @@ public class PasswordGeneratorGUI extends JFrame {
 		goBack   = new JButton("Go Back");
 		next     = new JButton("Get Next Password");
 		password = new JTextArea();
-		
+		saveBtn  = new JButton("Save");
 		password.setEditable(false);
 		goBack.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
@@ -80,6 +84,32 @@ public class PasswordGeneratorGUI extends JFrame {
 			}
 			
 		});
+		
+		saveBtn.addActionListener(new ActionListener(){
+	        public void actionPerformed(ActionEvent obj) {
+	        	JFileChooser chooser = new JFileChooser();
+	        	int retrival = chooser.showSaveDialog(null);
+	           // chooser.setCurrentDirectory( new File( "./") );
+	        	//FileWriter  fileWriter;
+	        if(obj.getActionCommand()== saveBtn.getActionCommand())
+	        {
+	        try 
+	            {
+	        	FileWriter outfile = new FileWriter(chooser.getSelectedFile()+".txt");
+	        	outfile.write(password.getText());
+	        	outfile.flush( );
+	        	outfile.close( );
+	         
+	          //      fileWriter = new FileWriter("C:\\Users\\user\\Desktop\\TestDoc.txt");
+	          //      fileToSave.write(password.getText());
+	          //      fileWriter.close();
+	          //      JOptionPane.showMessageDialog(null,"The message was successfully saved");
+	            }catch (Exception e) {JOptionPane.showMessageDialog(null,e+"");
+		}
+		}    
+	    }   
+	});
+		
 		next.addActionListener(new ActionListener() {
 
 			@Override
@@ -89,15 +119,16 @@ public class PasswordGeneratorGUI extends JFrame {
 			}
 			
 		});
-		
+
 		buttons.setLayout(new BorderLayout());
 		buttons.add(goBack, BorderLayout.WEST);
 		buttons.add(next, BorderLayout.EAST);
 		panel.setLayout(new BorderLayout());
 		panel.add(password, BorderLayout.NORTH);
 		panel.add(buttons, BorderLayout.SOUTH);
+		panel.add(saveBtn, BorderLayout.CENTER);
 		
-	}
+	}	
 	
 	public synchronized void generate() {
 		
