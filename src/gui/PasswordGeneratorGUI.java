@@ -89,7 +89,7 @@ public class PasswordGeneratorGUI extends JFrame {
 	        public void actionPerformed(ActionEvent obj) {
 	        	JFileChooser chooser = new JFileChooser();
 	        	int retrival = chooser.showSaveDialog(null);
-	           // chooser.setCurrentDirectory( new File( "./") );
+	          //  chooser.setCurrentDirectory( new File( ".txt") );
 	        	//FileWriter  fileWriter;
 	        if(obj.getActionCommand()== saveBtn.getActionCommand())
 	        {
