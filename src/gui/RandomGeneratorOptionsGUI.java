@@ -262,6 +262,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * Increases the number of characters to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * characters in the password goes out of range [6,30]
+	 */
 	private void incrementChars() throws LengthOutOfBoundsException {
 		
 		chars++;
@@ -273,6 +278,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * Decreases the number of characters to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * characters in the password goes out of range [6,30]
+	 */
 	private void decrementChars() throws LengthOutOfBoundsException {
 		
 		chars--;
@@ -284,6 +294,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * Increases the number of passwords to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * passwords goes out of range [1,100]
+	 */
 	private void incrementPasses() throws NumberOutOfBoundsException {
 		
 		passes++;
@@ -295,6 +310,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * Decreases the number of passwords to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * passwords goes out of range [1,100]
+	 */
 	private void decrementPasses() throws NumberOutOfBoundsException {
 		
 		passes--;
@@ -306,48 +326,84 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * After changing the numeric value for the number of characters,
+	 * this function will update that change to the user.
+	 */
 	private void updateCharacters() {
 		
 		characters.setText(String.valueOf(chars));
 		
 	}
 	
+	/**
+	 * After changing the numeric value for the number of passwords,
+	 * this function will update that change to the user.
+	 */
 	private void updatePasswords() {
 		
 		passwords.setText(String.valueOf(passes));
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the lowercase option,
+	 * and FALSE otherwise
+	 */
 	public boolean lowercase() {
 		
 		return lower.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the uppercase option,
+	 * and FALSE otherwise
+	 */
 	public boolean uppercase() {
 		
 		return upper.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the special characters
+	 * option, and FALSE otherwise
+	 */
 	public boolean specialCharacters() {
 		
 		return special.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the numeric option,
+	 * and FALSE otherwise
+	 */
 	public boolean numbers() {
 		
 		return number.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return The number of characters in the password length
+	 */
 	public int getNumberOfCharacters() {
 		
 		return chars;
 		
 	}
 	
+	/**
+	 * 
+	 * @return The number of passwords to generate
+	 */
 	public int getNumberOfPasswords() {
 		return passes;
 	}

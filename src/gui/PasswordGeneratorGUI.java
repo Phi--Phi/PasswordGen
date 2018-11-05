@@ -31,6 +31,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import main.RandomGeneratorMain;
 
@@ -86,29 +87,31 @@ public class PasswordGeneratorGUI extends JFrame {
 		});
 		
 		saveBtn.addActionListener(new ActionListener(){
-	        public void actionPerformed(ActionEvent obj) {
-	        	JFileChooser chooser = new JFileChooser();
-	        	int retrival = chooser.showSaveDialog(null);
-	          //  chooser.setCurrentDirectory( new File( ".txt") );
-	        	//FileWriter  fileWriter;
-	        if(obj.getActionCommand()== saveBtn.getActionCommand())
-	        {
-	        try 
-	            {
-	        	FileWriter outfile = new FileWriter(chooser.getSelectedFile()+".txt");
-	        	outfile.write(password.getText());
-	        	outfile.flush( );
-	        	outfile.close( );
-	         
-	          //      fileWriter = new FileWriter("C:\\Users\\user\\Desktop\\TestDoc.txt");
-	          //      fileToSave.write(password.getText());
-	          //      fileWriter.close();
-	          //      JOptionPane.showMessageDialog(null,"The message was successfully saved");
-	            }catch (Exception e) {JOptionPane.showMessageDialog(null,e+"");
-		}
-		}    
-	    }   
-	});
+			
+			public void actionPerformed(ActionEvent obj) {
+				
+				JFileChooser chooser = new JFileChooser();
+				//set the default file type to .txt files
+				chooser.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)","txt"));
+				chooser.showSaveDialog(null);
+				
+				if(obj.getActionCommand()== saveBtn.getActionCommand()) {
+					
+					try {
+						//save the file:
+						FileWriter outfile = new FileWriter(chooser.getSelectedFile());
+						outfile.write(password.getText());
+						outfile.flush();
+						outfile.close();
+						
+					} catch (NullPointerException e) {
+						//this happens when the user clicks cancel, so no action is required
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(null,e+"");
+					}
+				}
+			}
+		});
 		
 		next.addActionListener(new ActionListener() {
 
@@ -123,13 +126,21 @@ public class PasswordGeneratorGUI extends JFrame {
 		buttons.setLayout(new BorderLayout());
 		buttons.add(goBack, BorderLayout.WEST);
 		buttons.add(next, BorderLayout.EAST);
+		buttons.add(saveBtn, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout());
 		panel.add(password, BorderLayout.NORTH);
 		panel.add(buttons, BorderLayout.SOUTH);
-		panel.add(saveBtn, BorderLayout.CENTER);
 		
 	}	
 	
+	/**
+	 * <p>This function will generate the passwords based on
+	 * options.lowercase() options.uppercase() options.numbers()
+	 * options.specialCharacters options.getNumberOfPasswords() 
+	 * options.getNumberOfCharacters</p>
+	 * <p>
+	 * The generated password list is immediately displayed to the user</p>
+	 */
 	public synchronized void generate() {
 		
 		ArrayList<Character> alphabet = new ArrayList<Character>();
