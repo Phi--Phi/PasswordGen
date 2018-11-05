@@ -17,6 +17,7 @@ package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileWriter;
 
 import javax.swing.JFileChooser;
@@ -41,13 +42,27 @@ public class FileSaveGUI implements ActionListener {
 			
 			try {
 				//save the file:
-				FileWriter outfile = new FileWriter(chooser.getSelectedFile());
+				File file = chooser.getSelectedFile();
+				FileWriter outfile;
+				int overwrite;
+				if(file.exists()) {
+					overwrite = JOptionPane.showConfirmDialog(null, "The file " + file.getName() + 
+							" already exisits.\nAre you sure you want to overwrite it?", 
+							"File exsists", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+					if(overwrite != JOptionPane.YES_OPTION) {
+						throw new NullPointerException();
+					}
+					
+				}
+				outfile = new FileWriter(file);
 				outfile.write(parent.password.getText());
 				outfile.flush();
 				outfile.close();
 				
 			} catch (NullPointerException e) {
-				//this happens when the user clicks cancel, so no action is required
+				//this happens when the user clicks cancel
+				//or programmatically from attempting to overwrite a file,
+				//so no action is required
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null,e+"");
 			}
