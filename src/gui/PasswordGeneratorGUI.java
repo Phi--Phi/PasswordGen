@@ -21,17 +21,13 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import main.RandomGeneratorMain;
 
@@ -43,8 +39,9 @@ public class PasswordGeneratorGUI extends JFrame {
 	private static final long serialVersionUID = -1442493858262690625L;
 	
 	private JPanel panel;
-	private JButton goBack, next, saveBtn;
-	private JTextArea password;
+	//visibility is set to package
+	JButton goBack, next, saveBtn;
+	JTextArea password;
 	
 	
 	private RandomGeneratorOptionsGUI options;
@@ -86,32 +83,7 @@ public class PasswordGeneratorGUI extends JFrame {
 			
 		});
 		
-		saveBtn.addActionListener(new ActionListener(){
-			
-			public void actionPerformed(ActionEvent obj) {
-				
-				JFileChooser chooser = new JFileChooser();
-				//set the default file type to .txt files
-				chooser.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)","txt"));
-				chooser.showSaveDialog(null);
-				
-				if(obj.getActionCommand()== saveBtn.getActionCommand()) {
-					
-					try {
-						//save the file:
-						FileWriter outfile = new FileWriter(chooser.getSelectedFile());
-						outfile.write(password.getText());
-						outfile.flush();
-						outfile.close();
-						
-					} catch (NullPointerException e) {
-						//this happens when the user clicks cancel, so no action is required
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null,e+"");
-					}
-				}
-			}
-		});
+		saveBtn.addActionListener(new FileSaveGUI(this));
 		
 		next.addActionListener(new ActionListener() {
 
