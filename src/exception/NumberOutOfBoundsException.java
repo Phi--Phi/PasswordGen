@@ -15,12 +15,11 @@
 
 package exception;
 
-public class CharactersBoundsException extends Exception {
+public class NumberOutOfBoundsException extends Exception {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -2908145784931603593L;
+	private static final long serialVersionUID = -9142144415742609092L;
 
-	
 }

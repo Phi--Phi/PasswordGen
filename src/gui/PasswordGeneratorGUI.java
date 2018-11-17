@@ -27,7 +27,7 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 
 import main.RandomGeneratorMain;
 
@@ -39,8 +39,10 @@ public class PasswordGeneratorGUI extends JFrame {
 	private static final long serialVersionUID = -1442493858262690625L;
 	
 	private JPanel panel;
-	private JButton goBack, next;
-	private JTextField password;
+	//visibility is set to package
+	JButton goBack, next, saveBtn;
+	JTextArea password;
+	
 	
 	private RandomGeneratorOptionsGUI options;
 	
@@ -66,11 +68,11 @@ public class PasswordGeneratorGUI extends JFrame {
 		JPanel buttons = new JPanel();
 		goBack   = new JButton("Go Back");
 		next     = new JButton("Get Next Password");
-		password = new JTextField();
-		
+		password = new JTextArea();
+		saveBtn  = new JButton("Save");
 		password.setEditable(false);
 		goBack.addActionListener(new ActionListener() {
-
+			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
@@ -80,6 +82,9 @@ public class PasswordGeneratorGUI extends JFrame {
 			}
 			
 		});
+		
+		saveBtn.addActionListener(new FileSaveGUI(this));
+		
 		next.addActionListener(new ActionListener() {
 
 			@Override
@@ -89,16 +94,25 @@ public class PasswordGeneratorGUI extends JFrame {
 			}
 			
 		});
-		
+
 		buttons.setLayout(new BorderLayout());
 		buttons.add(goBack, BorderLayout.WEST);
 		buttons.add(next, BorderLayout.EAST);
+		buttons.add(saveBtn, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout());
 		panel.add(password, BorderLayout.NORTH);
 		panel.add(buttons, BorderLayout.SOUTH);
 		
-	}
+	}	
 	
+	/**
+	 * <p>This function will generate the passwords based on
+	 * options.lowercase() options.uppercase() options.numbers()
+	 * options.specialCharacters options.getNumberOfPasswords() 
+	 * options.getNumberOfCharacters</p>
+	 * <p>
+	 * The generated password list is immediately displayed to the user</p>
+	 */
 	public synchronized void generate() {
 		
 		ArrayList<Character> alphabet = new ArrayList<Character>();
@@ -156,13 +170,18 @@ public class PasswordGeneratorGUI extends JFrame {
 			alphabet.add('?');
 			
 		}
-		for (int i = 0; i < options.getNumberOfCharacters(); i++) {
-			
-			sb.append(alphabet.get(rand.nextInt(alphabet.size())));
-			
+		for (int i = 0; i < options.getNumberOfPasswords(); i++) {
+			for (int j = 0; j < options.getNumberOfCharacters(); j++) {
+				
+				sb.append(alphabet.get(rand.nextInt(alphabet.size())));
+				
+			}
+			sb.append("\n");
 		}
 		password.setText(sb.toString());
 		setVisible(true);
+		pack();
+		
 		
 	}
 	

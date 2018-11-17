@@ -16,17 +16,14 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,11 +32,25 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
-import exception.CharactersBoundsException;
+import exception.LengthOutOfBoundsException;
+import exception.NumberOutOfBoundsException;
+import exception.OptionSelectException;
 import main.RandomGeneratorMain;
+
+/**
+ * 
+ * This is the main GUI page the user will see. 
+ * Here the user can generate passwords and select the number 
+ * of passwords to generate, length of the password, and the 
+ * alphabet used for that password. There are three potential 
+ * error messages: character bounds, number bounds, and option 
+ * select error. Each password has a limit from 6 to 30 
+ * characters. The Password Generator can only generate up to 
+ * 100 passwords at a time. To generate a password, at least 
+ * one option must be selected for the alphabet of that password.
+ *
+ */
 
 public class RandomGeneratorOptionsGUI extends JFrame {
 
@@ -48,11 +59,11 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 4088542285928124199L;
 	
-	private JButton increment, decrement, submit;
-	private JTextArea characters;
-	private JPanel panel, numberOfChars, options;
+	private JButton submit;
+	private JTextArea characters, passwords;
+	private JPanel panel, numberOfChars, numberOfPasswords, options;
 	private JCheckBox lower, upper, number, special;
-	private int chars = 6;
+	private int chars = 6, passes = 1;
 	
 	private PasswordGeneratorGUI pgen;
 	
@@ -73,9 +84,14 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * This function sets up the GUI elements and positions them
+	 * on the screen.
+	 */
 	private void setupPanel() {
 		
 		setupNumberOfCharacters();
+		setupNumberOfPasswords();
 		setupOptions();
 		submit = new JButton("Generate");
 		submit.addActionListener(new ActionListener() {
@@ -90,14 +106,19 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		numberOfChars.setAlignmentX(Component.LEFT_ALIGNMENT);
+		numberOfPasswords.setAlignmentX(Component.LEFT_ALIGNMENT);
 		options.setAlignmentX(Component.LEFT_ALIGNMENT);
 		submit.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.add(numberOfChars);
+		panel.add(numberOfPasswords);
 		panel.add(options);
 		panel.add(submit);
 		
 	}
 	
+	/**
+	 * this function sets up the options checkboxes
+	 */
 	private void setupOptions() {
 		
 		lower 	= new JCheckBox("Lowercase letters");
@@ -115,9 +136,13 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 	}
 	
+	/**
+	 * this function sets up the length of password selection
+	 */
 	private void setupNumberOfCharacters() {
 		
 		JLabel numberOfCharactersInPassword;
+		JButton increment, decrement;
 		numberOfCharactersInPassword = new JLabel("How many characters do you want?");
 		
 		characters = new JTextArea();
@@ -126,7 +151,14 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				increment();
+				/**
+				 * on click for increment
+				 */
+				try {
+					incrementChars();
+				} catch (LengthOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(increment, "Enter a number between 6 and 30");
+				}
 				
 			}
 			
@@ -136,73 +168,16 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				/**
+				 * on click for decrement
+				 */
 				try {
-					
-					decrement();
-					
-				} catch (CharactersBoundsException e) {
-					
-					Color original_background = decrement.getBackground();
-					Border b                  = BorderFactory.createLineBorder(Color.RED),
-							original_border = decrement.getBorder();
-					decrement.setBackground(Color.RED);
-					decrement.setBorder(b);
-					shake(decrement, original_border, original_background);
-					
+					decrementChars();
+				} catch (LengthOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(decrement, "Enter a number between 6 and 30");
 				}
 				
 			}
-
-			private synchronized void shake(JButton button, Border original_border, Color original_background) {
-				
-				long delay = 75;
-				Point p    = button.getLocation();
-				
-				for (int i = 0; i < 30; i++) {
-					
-					try {
-						
-						//TODO execute Runnables
-						SwingUtilities.invokeLater(moveButton(button, new Point(p.x + 5, p.y)));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, p));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, new Point(p.x - 5, p.y)));
-						Thread.sleep(delay);
-						SwingUtilities.invokeLater(moveButton(button, p));
-						Thread.sleep(delay);
-						
-					} catch (InterruptedException ex) {
-						
-						SwingUtilities.invokeLater(moveButton(button,p));
-						button.setBorder(original_border);
-						button.setBackground(original_background);
-						return;
-						
-					}
-					button.setBorder(original_border);
-					button.setBackground(original_background);
-					
-				}
-				
-			}
-			
-			private Runnable moveButton(JButton button, final Point p) {
-				
-				return new Runnable() {
-					
-					@Override
-					public void run() {
-						
-						button.setLocation(p);
-						
-					}
-					
-				};
-				
-			}
-			
 		});
 		updateCharacters();
 		characters.setEditable(false);
@@ -214,75 +189,223 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		numberOfChars.add(numberOfCharactersInPassword, BorderLayout.NORTH);
 		
 	}
+	/**
+	 * this function sets up the number of passwords the user wants to generate
+	 * interface
+	 */
+	private void setupNumberOfPasswords() {
+		
+		JLabel numberOfPasswordsToGenerate;
+		JButton increment, decrement;
+		numberOfPasswordsToGenerate = new JLabel("How many passwords do you want?");
+		
+		passwords = new JTextArea();
+		increment  = new JButton("+");
+		increment.addActionListener(new ActionListener() {
+			/**
+			 * on click for increment
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					incrementPasses();
+				} catch (NumberOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(increment, "Enter a number between 1 and 100");
+				}
+				
+			}
+			
+		});
+		decrement  = new JButton("-");
+		decrement.addActionListener(new ActionListener() {
+			/**
+			 * on click for decrement
+			 */
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					decrementPasses();
+				} catch (NumberOutOfBoundsException e) {
+					JOptionPane.showMessageDialog(decrement, "Enter a number between 1 and 100");
+				}
+				
+			}	
+		});
+		updatePasswords();
+		passwords.setEditable(false);
+		numberOfPasswords = new JPanel();
+		numberOfPasswords.setLayout(new BorderLayout());
+		numberOfPasswords.add(decrement, BorderLayout.WEST);
+		numberOfPasswords.add(passwords, BorderLayout.CENTER);
+		numberOfPasswords.add(increment, BorderLayout.EAST);
+		numberOfPasswords.add(numberOfPasswordsToGenerate, BorderLayout.NORTH);
+		
+	}
 	
 	private void generate() {
 		
 		setVisible(false);
-		if (!lowercase() && !uppercase() && !specialCharacters() && !numbers()) {
-			
+		try {
+			if (!lowercase() && !uppercase() && !specialCharacters() && !numbers()) {
+				
+				throw new OptionSelectException();
+				
+			} else {
+				
+				pgen.generate();
+				
+			}
+		}catch (OptionSelectException e) {
 			JOptionPane.showMessageDialog(this, "An option must be selected");
 			setVisible(true);
-			
-		} else {
-			
-			pgen.generate();
-			
 		}
 		
 	}
 	
-	private void increment() {
+	/**
+	 * Increases the number of characters to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * characters in the password goes out of range [6,30]
+	 */
+	private void incrementChars() throws LengthOutOfBoundsException {
 		
 		chars++;
+		if(chars > 30) {
+			chars--;
+			throw new LengthOutOfBoundsException();
+		}
 		updateCharacters();
 		
 	}
 	
-	private void decrement() throws CharactersBoundsException {
+	/**
+	 * Decreases the number of characters to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * characters in the password goes out of range [6,30]
+	 */
+	private void decrementChars() throws LengthOutOfBoundsException {
 		
 		chars--;
 		if(chars < 6) {
 			chars++;
-			throw new CharactersBoundsException();
+			throw new LengthOutOfBoundsException();
 		}
 		updateCharacters();
 		
 	}
 	
+	/**
+	 * Increases the number of passwords to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * passwords goes out of range [1,100]
+	 */
+	private void incrementPasses() throws NumberOutOfBoundsException {
+		
+		passes++;
+		if(passes > 100) {
+			passes--;
+			throw new NumberOutOfBoundsException();
+		}
+		updatePasswords();
+		
+	}
+	
+	/**
+	 * Decreases the number of passwords to generate by 1
+	 * @throws NumberOutOfBoundsException when the value for number of 
+	 * passwords goes out of range [1,100]
+	 */
+	private void decrementPasses() throws NumberOutOfBoundsException {
+		
+		passes--;
+		if(passes < 1) {
+			passes++;
+			throw new NumberOutOfBoundsException();
+		}
+		updatePasswords();
+		
+	}
+	
+	/**
+	 * After changing the numeric value for the number of characters,
+	 * this function will update that change to the user.
+	 */
 	private void updateCharacters() {
 		
 		characters.setText(String.valueOf(chars));
 		
 	}
 	
+	/**
+	 * After changing the numeric value for the number of passwords,
+	 * this function will update that change to the user.
+	 */
+	private void updatePasswords() {
+		
+		passwords.setText(String.valueOf(passes));
+		
+	}
+	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the lowercase option,
+	 * and FALSE otherwise
+	 */
 	public boolean lowercase() {
 		
 		return lower.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the uppercase option,
+	 * and FALSE otherwise
+	 */
 	public boolean uppercase() {
 		
 		return upper.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the special characters
+	 * option, and FALSE otherwise
+	 */
 	public boolean specialCharacters() {
 		
 		return special.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return A boolean value TRUE if the user checked the numeric option,
+	 * and FALSE otherwise
+	 */
 	public boolean numbers() {
 		
 		return number.isSelected();
 		
 	}
 	
+	/**
+	 * 
+	 * @return The number of characters in the password length
+	 */
 	public int getNumberOfCharacters() {
 		
 		return chars;
 		
+	}
+	
+	/**
+	 * 
+	 * @return The number of passwords to generate
+	 */
+	public int getNumberOfPasswords() {
+		return passes;
 	}
 	
 }

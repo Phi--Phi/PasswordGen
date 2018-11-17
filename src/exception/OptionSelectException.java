@@ -13,19 +13,13 @@
    limitations under the License.
 */
 
-package main;
+package exception;
 
-import gui.RandomGeneratorOptionsGUI;
+public class OptionSelectException extends Exception {
 
-public class RandomGeneratorMain {
-	
-	public static final String VERSION = "v1.0";
-	public static final String TITLE = "Random Password Generator " + VERSION;
-	
-	public static void main(String[] args) {
-		
-		new RandomGeneratorOptionsGUI();
-		
-	}
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4669708815676798282L;
 
 }
