@@ -19,7 +19,7 @@ import gui.RandomGeneratorOptionsGUI;
 
 public class RandomGeneratorMain {
 	
-	public static final String VERSION = "v0.1-alpha";
+	public static final String VERSION = "v1.0";
 	public static final String TITLE = "Random Password Generator " + VERSION;
 	
 	public static void main(String[] args) {
