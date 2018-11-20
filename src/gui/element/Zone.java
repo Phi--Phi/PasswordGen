@@ -26,40 +26,11 @@ import javax.swing.JComponent;
 public class Zone extends JComponent {
 	
 	
-	public class FarLeft implements MouseListener {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -631615879959579539L;
 
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	
 	public class Left implements MouseListener {
 
 		@Override
@@ -94,39 +65,6 @@ public class Zone extends JComponent {
 		
 	}
 	
-	public class FarRight implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
 
 	public class Right implements MouseListener {
 
@@ -162,15 +100,28 @@ public class Zone extends JComponent {
 		
 	}
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -631615879959579539L;
+	public class JRectangle extends JComponent {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2429536843663657761L;
+		public Rectangle r;
+		public JRectangle(Cursor c) {
+			setCursor(c);
+		}
+		
+		public void paint(Graphics g) {
+			setBounds(r);
+			setPreferredSize(r.getSize());
+		}
+	}
+	
 	private volatile int totalSegments, startSegment,endSegment;
+	private volatile JRectangle left, right;
 	
 	public Zone(int segments) {
-		
-		setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
 		totalSegments = segments;
 		startSegment = 0;
 		endSegment = totalSegments;

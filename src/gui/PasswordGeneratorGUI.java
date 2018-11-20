@@ -22,6 +22,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -29,6 +31,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import gui.element.Zone;
+import gui.element.ZoneSpec;
 import main.RandomGeneratorMain;
 
 public class PasswordGeneratorGUI extends JFrame {
@@ -37,17 +41,16 @@ public class PasswordGeneratorGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -1442493858262690625L;
-	
+
 	private JPanel panel;
-	//visibility is set to package
+	// visibility is set to package
 	JButton goBack, next, saveBtn;
 	JTextArea password;
-	
-	
+
 	private RandomGeneratorOptionsGUI options;
-	
-	public PasswordGeneratorGUI (RandomGeneratorOptionsGUI opt) {
-		
+
+	public PasswordGeneratorGUI(RandomGeneratorOptionsGUI opt) {
+
 		Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
 		panel = new JPanel();
 		options = opt;
@@ -55,44 +58,44 @@ public class PasswordGeneratorGUI extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle(RandomGeneratorMain.TITLE);
-		setMinimumSize(new Dimension(380,10));
-	    setIconImage(icon);
-	    setupPanel();
-	    add(panel);
-	    pack();
-	    
+		setMinimumSize(new Dimension(380, 10));
+		setIconImage(icon);
+		setupPanel();
+		add(panel);
+		pack();
+
 	}
-	
+
 	public void setupPanel() {
-		
+
 		JPanel buttons = new JPanel();
-		goBack   = new JButton("Go Back");
-		next     = new JButton("Get Next Password");
+		goBack = new JButton("Go Back");
+		next = new JButton("Get Next Password");
 		password = new JTextArea();
-		saveBtn  = new JButton("Save");
+		saveBtn = new JButton("Save");
 		password.setEditable(false);
 		goBack.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
 				pack();
 				options.setVisible(true);
-				
+
 			}
-			
+
 		});
-		
+
 		saveBtn.addActionListener(new FileSaveGUI(this));
-		
+
 		next.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				generate();
-				
+				//generate();
+
 			}
-			
+
 		});
 
 		buttons.setLayout(new BorderLayout());
@@ -102,87 +105,94 @@ public class PasswordGeneratorGUI extends JFrame {
 		panel.setLayout(new BorderLayout());
 		panel.add(password, BorderLayout.NORTH);
 		panel.add(buttons, BorderLayout.SOUTH);
-		
-	}	
-	
+
+	}
+
 	/**
-	 * <p>This function will generate the passwords based on
-	 * options.lowercase() options.uppercase() options.numbers()
-	 * options.specialCharacters options.getNumberOfPasswords() 
-	 * options.getNumberOfCharacters</p>
 	 * <p>
-	 * The generated password list is immediately displayed to the user</p>
+	 * This function will generate the passwords based on options.lowercase()
+	 * options.uppercase() options.numbers() options.specialCharacters
+	 * options.getNumberOfPasswords() options.getNumberOfCharacters
+	 * </p>
+	 * <p>
+	 * The generated password list is immediately displayed to the user
+	 * </p>
+	 * 
+	 * @param zones
 	 */
-	public synchronized void generate() {
-		
+	public synchronized void generate(List<ZoneSpec> zones) {
+
 		ArrayList<Character> alphabet = new ArrayList<Character>();
-		Random rand                   = new Random();
-		StringBuilder sb              = new StringBuilder();
-		
+		Random rand = new Random();
+		StringBuilder sb = new StringBuilder();
+		ZoneSpec z;
+
 		options.pack();
-		if (options.lowercase()) {
-			
-			for (char c = 'a'; c <= 'z'; c++) {
-				
-				alphabet.add(c);
-				
-			}
-			
-		}
-		if (options.uppercase()) {
-			
-			for (char c = 'A'; c <= 'Z'; c++) {
-				
-				alphabet.add(c);
-				
-			}
-			
-		}
-		if (options.numbers()) {
-			
-			for (char c = '0'; c <= '9'; c++) {
-				
-				alphabet.add(c);
-				
-			}
-			
-		}
-		if (options.specialCharacters()) {
-			
-			alphabet.add('!');
-			alphabet.add('@');
-			alphabet.add('#');
-			alphabet.add('$');
-			alphabet.add('%');
-			alphabet.add('^');
-			alphabet.add('&');
-			alphabet.add('*');
-			alphabet.add('(');
-			alphabet.add(')');
-			alphabet.add('-');
-			alphabet.add('_');
-			alphabet.add('+');
-			alphabet.add('=');
-			alphabet.add(':');
-			alphabet.add(';');
-			alphabet.add('<');
-			alphabet.add('>');
-			alphabet.add('?');
-			
-		}
 		for (int i = 0; i < options.getNumberOfPasswords(); i++) {
-			for (int j = 0; j < options.getNumberOfCharacters(); j++) {
-				
-				sb.append(alphabet.get(rand.nextInt(alphabet.size())));
-				
+			for (Iterator<ZoneSpec> j = zones.iterator(); j.hasNext();) {
+				z = j.next();
+				alphabet.clear();
+				if (z.lowercase()) {
+
+					for (char c = 'a'; c <= 'z'; c++) {
+
+						alphabet.add(c);
+
+					}
+
+				}
+				if (z.uppercase()) {
+
+					for (char c = 'A'; c <= 'Z'; c++) {
+
+						alphabet.add(c);
+
+					}
+
+				}
+				if (z.numbers()) {
+
+					for (char c = '0'; c <= '9'; c++) {
+
+						alphabet.add(c);
+
+					}
+
+				}
+				if (z.specialCharacters()) {
+
+					alphabet.add('!');
+					alphabet.add('@');
+					alphabet.add('#');
+					alphabet.add('$');
+					alphabet.add('%');
+					alphabet.add('^');
+					alphabet.add('&');
+					alphabet.add('*');
+					alphabet.add('(');
+					alphabet.add(')');
+					alphabet.add('-');
+					alphabet.add('_');
+					alphabet.add('+');
+					alphabet.add('=');
+					alphabet.add(':');
+					alphabet.add(';');
+					alphabet.add('<');
+					alphabet.add('>');
+					alphabet.add('?');
+
+				}
+				for(int k = 0; k < z.getNumberOfCharacters(); k++) {
+					sb.append(alphabet.get(rand.nextInt(alphabet.size())));
+				}
+
 			}
 			sb.append("\n");
 		}
 		password.setText(sb.toString());
 		setVisible(true);
 		pack();
-		
-		
+
 	}
-	
+
 }
