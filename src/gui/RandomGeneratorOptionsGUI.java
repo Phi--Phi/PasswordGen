@@ -60,19 +60,21 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	 */
 	private static final long serialVersionUID = 4088542285928124199L;
 
-	private JButton submit;
+	private JButton submit, advancedOpt;
 	private JTextArea characters, passwords;
-	private JPanel panel, numberOfChars, numberOfPasswords, options;
+	private JPanel panel, numberOfChars, numberOfPasswords;
 
 	private int chars = 6, passes = 1;
 
 	private PasswordGeneratorGUI pgen;
+	private PasswordGeneratorZoneGUI zonegui;
 
 	public RandomGeneratorOptionsGUI() throws HeadlessException {
 
 		Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
 		panel = new JPanel();
 		pgen = new PasswordGeneratorGUI(this);
+		zonegui = new PasswordGeneratorZoneGUI(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle(RandomGeneratorMain.TITLE);
@@ -82,7 +84,6 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		add(panel);
 		pack();
 		setVisible(true);
-
 	}
 
 	/**
@@ -92,26 +93,35 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 		setupNumberOfCharacters();
 		setupNumberOfPasswords();
-
-		submit = new JButton("Generate");
+		
+		advancedOpt = new JButton("Advanced Options");
+		submit 		= new JButton("Generate");
 		submit.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-				generate(null);
+			public void actionPerformed(ActionEvent e) {
+				//setVisible(false);
+				//generate(null);
 
 			}
 
 		});
+		advancedOpt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				zonegui.setVisible(true);
+			}
+		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		numberOfChars.setAlignmentX(Component.LEFT_ALIGNMENT);
 		numberOfPasswords.setAlignmentX(Component.LEFT_ALIGNMENT);
-		options.setAlignmentX(Component.LEFT_ALIGNMENT);
 		submit.setAlignmentX(Component.LEFT_ALIGNMENT);
+		advancedOpt.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.add(numberOfChars);
 		panel.add(numberOfPasswords);
-		panel.add(options);
+		panel.add(advancedOpt);
 		panel.add(submit);
 
 	}

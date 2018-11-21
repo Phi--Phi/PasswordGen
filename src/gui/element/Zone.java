@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 
 public class Zone extends JComponent {
 	
@@ -100,21 +101,17 @@ public class Zone extends JComponent {
 		
 	}
 	
-	public class JRectangle extends JComponent {
+	public class JRectangle extends JPanel {
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -2429536843663657761L;
-		public Rectangle r;
 		public JRectangle(Cursor c) {
 			setCursor(c);
+			setOpaque(false);
 		}
 		
-		public void paint(Graphics g) {
-			setBounds(r);
-			setPreferredSize(r.getSize());
-		}
 	}
 	
 	private volatile int totalSegments, startSegment,endSegment;
@@ -122,6 +119,7 @@ public class Zone extends JComponent {
 	
 	public Zone(int segments) {
 		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 		totalSegments = segments;
 		startSegment = 0;
 		endSegment = totalSegments;
