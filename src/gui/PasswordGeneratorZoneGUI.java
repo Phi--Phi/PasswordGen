@@ -17,19 +17,10 @@ package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.TextField;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import java.util.Vector;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
-import gui.element.Zone;
 import gui.element.ZoneSpec;
 
 public class PasswordGeneratorZoneGUI extends JFrame {
@@ -40,26 +31,32 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	private static final long serialVersionUID = 5435024379805897010L;
 	private static final int MAX_ZONES = 30;
 	private RandomGeneratorOptionsGUI parent;
-	private ZoneSpec []specs = new ZoneSpec[MAX_ZONES];
-	private Zone [] zones = new Zone[MAX_ZONES];
-	private volatile int numZones;
+	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
 		setMinimumSize(new Dimension(500,300));
 		setLayout(new BorderLayout());
 		parent = rgo;
 		resetZones();
-		numZones = 1;
 		
 	}
 	
+	public void addZone(int startPos) {
+		ZoneSpec temp = new ZoneSpec();
+		temp.setSize(parent.getNumberOfCharacters());
+		temp.moveStart(startPos);
+		temp.moveEnd(startPos + 1);
+	}
+	
+	/**
+	 * clears all zone configuration and resets it to one zone with lowercase checked
+	 */
 	public synchronized void resetZones() {
-		int size = parent.getNumberOfCharacters();
-		for(int i = 0; i < MAX_ZONES; i ++) {
-			specs[i] = new ZoneSpec();
-			zones[i] = new Zone(size);
-			specs[i].setSize(size);
-		}
+		ZoneSpec temp = new ZoneSpec();
+		temp.setSize(parent.getNumberOfCharacters());
+		specs.clear();
+		specs.add(temp);
+		
 	}
 	
 }

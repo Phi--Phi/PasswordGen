@@ -27,10 +27,12 @@ public class ZoneSpec extends JPanel {
 	private static final long serialVersionUID = -375743799737480566L;
 	private JCheckBox lower, upper, number, special;
 	private int size;
+	private Zone z;
 	
 	public ZoneSpec() {
 		size = 0;
 		setupOptions();
+		z = new Zone(size);
 	}
 	
 	/**
@@ -42,6 +44,8 @@ public class ZoneSpec extends JPanel {
 		upper 	= new JCheckBox("Uppercase letters");
 		number 	= new JCheckBox("Numeric");
 		special = new JCheckBox("Special characters");
+		//default will have lower selected
+		lower.setSelected(true);
 		
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		add(lower);
@@ -51,8 +55,13 @@ public class ZoneSpec extends JPanel {
 		
 	}
 	
+	public Zone getZone() {
+		return z;
+	}
+	
 	public void setSize(int size) {
 		this.size = size;
+		z.setSize(size);
 	}
 	
 	/**
@@ -101,5 +110,13 @@ public class ZoneSpec extends JPanel {
 	
 	public int getNumberOfCharacters() {
 		return size;
+	}
+	
+	public synchronized void moveStart (int newstart) {
+		z.moveStart(newstart);
+	}
+	
+	public synchronized void moveEnd(int newend) {
+		z.moveEnd(newend);
 	}
 }

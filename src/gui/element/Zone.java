@@ -118,11 +118,7 @@ public class Zone extends JComponent {
 	private volatile JRectangle left, right;
 	
 	public Zone(int segments) {
-		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
-		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-		totalSegments = segments;
-		startSegment = 0;
-		endSegment = totalSegments;
+		setSize(segments);
 	}
 	
 	public Zone (int segments, int start) {
@@ -133,6 +129,14 @@ public class Zone extends JComponent {
 	public Zone (int segments, int start, int end) {
 		this(segments, start);
 		endSegment = end;
+	}
+	
+	public synchronized void setSize(int size) {
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+		totalSegments = size;
+		startSegment = 0;
+		endSegment = totalSegments;
 	}
 	
 	public synchronized void moveStart (int newstart) {

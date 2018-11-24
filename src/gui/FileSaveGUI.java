@@ -27,6 +27,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class FileSaveGUI implements ActionListener {
 
 	private PasswordGeneratorGUI parent;
+	
 	public FileSaveGUI(PasswordGeneratorGUI parent) {
 		this.parent = parent;
 	}
