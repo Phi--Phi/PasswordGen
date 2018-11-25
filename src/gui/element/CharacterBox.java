@@ -15,6 +15,7 @@
 
 package gui.element;
 
+import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -29,7 +30,8 @@ public class CharacterBox extends JTextField {
 
 	public CharacterBox() {
 		// textField used that sets the width of the textbox to three
-		
+		setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
+	
 		// Key stroke listener, when the user enters the enter key or up, down, left, right arrow keys
 		// the program will take the last character the user enters
 		addKeyListener(new KeyAdapter(){
@@ -38,7 +40,15 @@ public class CharacterBox extends JTextField {
 		    	int e = evt.getKeyCode();
 		    	if (e == KeyEvent.VK_BACK_SPACE) {
 		    		setText("xx");
-		    	}else if(e != KeyEvent.VK_ALPHANUMERIC) {
+		    	}
+		    	else if (e == KeyEvent.VK_DELETE || e == KeyEvent.VK_CONTROL || 
+		    			e == KeyEvent.VK_ALT || e == KeyEvent.VK_WINDOWS ||
+		    			e == KeyEvent.VK_F || e == KeyEvent.VK_F2 || e == KeyEvent.VK_F3 ||
+		    			e == KeyEvent.VK_F5 || e == KeyEvent.VK_NUM_LOCK || e == KeyEvent.VK_CAPS_LOCK ||
+		    			e == KeyEvent.VK_ESCAPE || e == KeyEvent.VK_KP_DOWN || e == KeyEvent.VK_KP_UP ||
+		    			e == KeyEvent.VK_KP_LEFT || e == KeyEvent.VK_KP_RIGHT || e == KeyEvent.VK_ENTER ||
+		    			e == KeyEvent.VK_PAGE_DOWN || e == KeyEvent.VK_PAGE_UP || e == KeyEvent.VK_END ||
+		    			e == KeyEvent.VK_HOME || e == KeyEvent.VK_INSERT) {
 		    		setText("x");
 		    	}
 		    	else {
