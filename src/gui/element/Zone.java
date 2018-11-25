@@ -25,6 +25,8 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import gui.PasswordGeneratorZoneGUI;
+
 public class Zone extends JComponent {
 
 	/**
@@ -39,7 +41,7 @@ public class Zone extends JComponent {
 		 */
 		private static final long serialVersionUID = 7998903397632243199L;
 		private volatile boolean dragging = false;
-		public static final int LEFT = 1, RIGHT = 2;
+		public static final int LEFT = -1, RIGHT = 1;
 		private int direction;
 
 		public JRectangle(Cursor c, int direction) {
@@ -57,14 +59,20 @@ public class Zone extends JComponent {
 				double length = getWidth() / totalSegments;
 				double x1 = (length * startSegment) + getX();
 				double x2 = (length * endSegment) + getX();
-				int index;
+				int index, lb, ub;
 
 				if ((mx < x1 || mx > x1) && direction == LEFT) {
+					ub = endSegment - 1;
+					lb = parent.scan(startSegment, LEFT);
 					index = (int) Math.round(mx / length);
-					moveStart(index);
+					if(index <= ub && index >= lb)
+						moveStart(index);
 				} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
+					ub = parent.scan(endSegment, RIGHT);
+					lb = startSegment + 1;
 					index = (int) Math.round(mx / length);
-					moveEnd(index);
+					if(index <= ub && index >= lb)
+						moveEnd(index);
 				}
 			}
 		}
@@ -118,20 +126,22 @@ public class Zone extends JComponent {
 	}
 
 	private volatile int totalSegments, startSegment, endSegment;
+	private PasswordGeneratorZoneGUI parent;
 	private volatile JRectangle left, right;
 
-	public Zone(int segments) {
+	public Zone(int segments, PasswordGeneratorZoneGUI parent) {
+		this.parent = parent;
 		setOpaque(false);
 		setSize(segments);
 	}
 
-	public Zone(int segments, int start) {
-		this(segments);
+	public Zone(int segments, int start, PasswordGeneratorZoneGUI parent) {
+		this(segments, parent);
 		startSegment = start;
 	}
 
-	public Zone(int segments, int start, int end) {
-		this(segments, start);
+	public Zone(int segments, int start, int end, PasswordGeneratorZoneGUI parent) {
+		this(segments, start, parent);
 		endSegment = end;
 	}
 

@@ -118,7 +118,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	}
 
 	public void addZone(int startPos) {
-		ZoneSpec temp = new ZoneSpec();
+		ZoneSpec temp = new ZoneSpec(this);
 		temp.setSize(parent.getNumberOfCharacters());
 		temp.moveStart(startPos);
 		temp.moveEnd(startPos + 1);
@@ -129,9 +129,9 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	 * checked
 	 */
 	public synchronized void resetZones() {
-		ZoneSpec temp = new ZoneSpec();
+		ZoneSpec temp = new ZoneSpec(this);
 		CharacterBox temp2;
-		;
+		
 		temp.setSize(parent.getNumberOfCharacters());
 		characters.removeAll();
 		characters.setLayout(new GridLayout(1, parent.getNumberOfCharacters()));
@@ -145,5 +145,26 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		specs.add(temp);
 
 	}
-
+	
+	public synchronized int scan(int index, int direction) {
+		if(direction > 0) {
+			for (int i = index+1; i < boxes.size(); i++) {
+				if(boxes.get(i).isEditable()) {
+					index = i;
+				} else {
+					return index;
+				}
+			}
+		} else if (direction < 0) {
+			for(int i = index -1; i >=0; i--) {
+				if(boxes.get(i).isEditable()) {
+					index = i;
+				} else {
+					return index;
+				}
+			}
+		}
+		return index;
+	}
+	
 }

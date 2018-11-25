@@ -19,6 +19,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import gui.PasswordGeneratorZoneGUI;
+
 public class ZoneSpec extends JPanel {
 
 	/**
@@ -29,10 +31,10 @@ public class ZoneSpec extends JPanel {
 	private int size;
 	private Zone z;
 	
-	public ZoneSpec() {
+	public ZoneSpec(PasswordGeneratorZoneGUI parent) {
 		size = 0;
 		setupOptions();
-		z = new Zone(size);
+		z = new Zone(size, parent);
 	}
 	
 	/**
