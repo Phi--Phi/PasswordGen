@@ -68,19 +68,19 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		setBounds(100, 100, 450, 300);
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.columnWidths = new int[]{5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{20, 51, 36, 0, 36, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 		
 		JPanel characters = new JPanel();
 		characters.setBackground(Color.GREEN);
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.gridwidth = 11;
+		gbc_panel_1.gridwidth = 10;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 0;
+		gbc_panel_1.gridx = 1;
 		gbc_panel_1.gridy = 1;
 		getContentPane().add(characters, gbc_panel_1);
 		
@@ -90,7 +90,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_2.gridwidth = 11;
 		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 0;
+		gbc_panel_2.gridx = 1;
 		gbc_panel_2.gridy = 2;
 		getContentPane().add(zoneMadness, gbc_panel_2);
 		
@@ -101,7 +101,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel.gridheight = 4;
 		gbc_panel.insets = new Insets(0, 0, 0, 5);
 		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 0;
+		gbc_panel.gridx = 1;
 		gbc_panel.gridy = 4;
 		getContentPane().add(checkboxes, gbc_panel);
 		
