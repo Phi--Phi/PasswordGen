@@ -148,9 +148,13 @@ public class Zone extends JComponent {
 	public synchronized void setSize(int size) {
 		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR), JRectangle.LEFT);
 		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR), JRectangle.RIGHT);
+		left.setSize((int) ((getWidth()*0.5)/size), getHeight());
+		right.setSize(left.getWidth(), getHeight());
+		
 		totalSegments = size;
 		startSegment = 0;
 		endSegment = totalSegments;
+		
 	}
 
 	public synchronized void moveStart(int newstart) {

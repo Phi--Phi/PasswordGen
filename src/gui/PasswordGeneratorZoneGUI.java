@@ -40,7 +40,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	// private static final int MAX_ZONES = 30;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
-	private JPanel characters;
+	private JPanel characters, zoneMadness;
 	private Vector<CharacterBox> boxes;
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
@@ -81,8 +81,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_1.gridy = 1;
 		getContentPane().add(characters, gbc_panel_1);
 
-		JPanel zoneMadness = new JPanel();
-		zoneMadness.setBackground(Color.ORANGE);
+		zoneMadness = new JPanel();
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.gridwidth = 11;
 		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
@@ -91,16 +90,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_2.gridy = 2;
 		getContentPane().add(zoneMadness, gbc_panel_2);
 
-		JPanel checkboxes = new JPanel();
-		checkboxes.setBackground(Color.PINK);
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridwidth = 7;
-		gbc_panel.gridheight = 4;
-		gbc_panel.insets = new Insets(0, 0, 0, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 1;
-		gbc_panel.gridy = 4;
-		getContentPane().add(checkboxes, gbc_panel);
+		
 
 		JButton addZone = new JButton("Add Zone");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -134,16 +124,31 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		
 		temp.setSize(parent.getNumberOfCharacters());
 		characters.removeAll();
+		zoneMadness.removeAll();
 		characters.setLayout(new GridLayout(1, parent.getNumberOfCharacters()));
+		
 		boxes.clear();
 		for (int i = 0; i < parent.getNumberOfCharacters(); i++) {
 			temp2 = new CharacterBox();
 			boxes.add(temp2);
 			characters.add(temp2);
 		}
+		
 		specs.clear();
 		specs.add(temp);
-
+		
+		for(int i = 0; i < specs.size(); i++) {
+			GridBagConstraints gbc_panel = new GridBagConstraints();
+			gbc_panel.gridwidth = 7;
+			gbc_panel.gridheight = 4;
+			gbc_panel.insets = new Insets(0, 0, 0, 5);
+			gbc_panel.fill = GridBagConstraints.BOTH;
+			gbc_panel.gridx = 1;
+			gbc_panel.gridy = 4;
+			getContentPane().add(specs.elementAt(i), gbc_panel);
+			specs.elementAt(i).getZone().setSize(zoneMadness.getSize());
+			zoneMadness.add(specs.elementAt(i).getZone());
+		}
 	}
 	
 	public synchronized int scan(int index, int direction) {
