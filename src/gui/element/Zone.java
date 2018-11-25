@@ -15,142 +15,154 @@
 
 package gui.element;
 
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 public class Zone extends JComponent {
-	
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -631615879959579539L;
 
-	public class Left implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	
-
-	public class Right implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	
-	public class JRectangle extends JPanel {
+	public class JRectangle extends JPanel implements MouseMotionListener, MouseListener {
 
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = -2429536843663657761L;
-		public JRectangle(Cursor c) {
+		private static final long serialVersionUID = 7998903397632243199L;
+		private volatile boolean dragging = false;
+		public static final int LEFT = 1, RIGHT = 2;
+		private int direction;
+
+		public JRectangle(Cursor c, int direction) {
 			setCursor(c);
 			setOpaque(false);
+			this.direction = direction;
+			addMouseMotionListener(this);
+			addMouseListener(this);
 		}
-		
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			if (dragging) {
+				double mx = e.getX();
+				double length = getWidth() / totalSegments;
+				double x1 = (length * startSegment) + getX();
+				double x2 = (length * endSegment) + getX();
+				int index;
+
+				if ((mx < x1 || mx > x1) && direction == LEFT) {
+					index = (int) Math.round(mx / length);
+					moveStart(index);
+				} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
+					index = (int) Math.round(mx / length);
+					moveEnd(index);
+				}
+			}
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			double mx = e.getX();
+			double x1 = ((getWidth() / totalSegments) * startSegment) + getX();
+			double x2 = ((getWidth() / totalSegments) * endSegment) + getX();
+
+			if ((mx < x1 || mx > x1) && direction == LEFT) {
+				dragging = true;
+			} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
+				dragging = true;
+			}
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			dragging = false;
+		}
+
+		public int getDirection() {
+			return direction;
+		}
+
 	}
-	
-	private volatile int totalSegments, startSegment,endSegment;
+
+	private volatile int totalSegments, startSegment, endSegment;
 	private volatile JRectangle left, right;
-	
+
 	public Zone(int segments) {
+		setOpaque(false);
 		setSize(segments);
 	}
-	
-	public Zone (int segments, int start) {
+
+	public Zone(int segments, int start) {
 		this(segments);
 		startSegment = start;
 	}
-	
-	public Zone (int segments, int start, int end) {
+
+	public Zone(int segments, int start, int end) {
 		this(segments, start);
 		endSegment = end;
 	}
-	
+
 	public synchronized void setSize(int size) {
-		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
-		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR), JRectangle.LEFT);
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR), JRectangle.RIGHT);
 		totalSegments = size;
 		startSegment = 0;
 		endSegment = totalSegments;
 	}
-	
-	public synchronized void moveStart (int newstart) {
+
+	public synchronized void moveStart(int newstart) {
 		startSegment = newstart;
+		repaint();
 	}
-	
+
 	public synchronized void moveEnd(int newend) {
 		endSegment = newend;
+		repaint();
 	}
-	
+
 	public void paint(Graphics g) {
+		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX());
+		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX());
+		int y = Math.round((getHeight() * 0.5f) + getY());
+		int y2 = Math.round((getHeight() * 0.85f) +getY());
+		g.setColor(Color.BLACK);
+		g.drawLine(x1, y, x2, y);
+		g.drawLine(x1, y2, x1, y2);
+		g.drawLine(x2, y2, x2, y2);
 		
 	}
-	
-	
 
 }

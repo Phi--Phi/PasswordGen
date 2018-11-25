@@ -1,42 +1,33 @@
-/* Copyright 2018 Philip Klein
-
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
-*/
-
 package gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileWriter;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileFilter;
 
-public class FileSaveGUI implements ActionListener {
+class FileSaveGUI implements ActionListener {
 
 	private PasswordGeneratorGUI parent;
-	
 	public FileSaveGUI(PasswordGeneratorGUI parent) {
 		this.parent = parent;
 	}
 	
+	private static final FileFilter txt = new FileNameExtensionFilter("Text File (*.txt)","txt"),
+			csv = new FileNameExtensionFilter("CSV File (*.csv)","csv");
+	
+				
 	public void actionPerformed(ActionEvent obj) {
 		
 		JFileChooser chooser = new JFileChooser();
 		//set the default file type to .txt files
-		chooser.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)","txt"));
+		//chooser.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)","txt"));
+		chooser.setFileFilter(csv);
+		chooser.setFileFilter(txt);
+		
 		chooser.showSaveDialog(null);
 		
 		if(obj.getActionCommand()== parent.saveBtn.getActionCommand()) {
@@ -46,6 +37,26 @@ public class FileSaveGUI implements ActionListener {
 				File file = chooser.getSelectedFile();
 				FileWriter outfile;
 				int overwrite;
+				FileFilter filter = chooser.getFileFilter();
+				
+				
+				//type file
+				System.out.println(file.getName());
+				if(filter.equals(txt)) {
+					if(!file.getName().endsWith(".txt")){
+						file = new File(file.getPath()+".txt");
+				}			
+					
+
+				}	
+				if(filter.equals(csv))  {
+
+						if(!file.getName().endsWith(".csv")){
+							file = new File(file.getPath()+".csv");
+
+					}			
+				}
+				
 				if(file.exists()) {
 					overwrite = JOptionPane.showConfirmDialog(null, "The file " + file.getName() + 
 							" already exisits.\nAre you sure you want to overwrite it?", 
@@ -55,6 +66,7 @@ public class FileSaveGUI implements ActionListener {
 					}
 					
 				}
+				
 				outfile = new FileWriter(file);
 				outfile.write(parent.password.getText());
 				outfile.flush();
@@ -68,5 +80,5 @@ public class FileSaveGUI implements ActionListener {
 				JOptionPane.showMessageDialog(null,e+"");
 			}
 		}
-	}
-}
+	
+}}
