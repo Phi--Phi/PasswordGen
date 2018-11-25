@@ -16,12 +16,25 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.TextField;
+import java.awt.Toolkit;
 import java.util.Vector;
 
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import gui.element.ZoneSpec;
+import main.RandomGeneratorMain;
 
 public class PasswordGeneratorZoneGUI extends JFrame {
 	
@@ -32,13 +45,81 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	private static final int MAX_ZONES = 30;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
-
+	
+	private JFrame frame;
+	
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
-		setMinimumSize(new Dimension(500,300));
-		setLayout(new BorderLayout());
+	    setMinimumSize(new Dimension(500,300));		   
+	    initialize();
 		parent = rgo;
 		resetZones();
 		
+		//panel = new JPanel();
+		setVisible(false);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		setTitle(RandomGeneratorMain.TITLE);
+		//add(panel);
+		pack();
+	}
+	
+	private void initialize()
+	{
+		setBounds(100, 100, 450, 300);
+		
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{20, 51, 36, 0, 36, 0, 0, 0, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		getContentPane().setLayout(gridBagLayout);
+		
+		JPanel characters = new JPanel();
+		characters.setBackground(Color.GREEN);
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.gridwidth = 11;
+		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.gridx = 0;
+		gbc_panel_1.gridy = 1;
+		getContentPane().add(characters, gbc_panel_1);
+		
+		JPanel zoneMadness = new JPanel();
+		zoneMadness.setBackground(Color.ORANGE);
+		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.gridwidth = 11;
+		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_panel_2.fill = GridBagConstraints.BOTH;
+		gbc_panel_2.gridx = 0;
+		gbc_panel_2.gridy = 2;
+		getContentPane().add(zoneMadness, gbc_panel_2);
+		
+		JPanel checkboxes = new JPanel();
+		checkboxes.setBackground(Color.PINK);
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.gridwidth = 7;
+		gbc_panel.gridheight = 4;
+		gbc_panel.insets = new Insets(0, 0, 0, 5);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 4;
+		getContentPane().add(checkboxes, gbc_panel);
+		
+		
+		
+		JButton addZone = new JButton("Add Zone");
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton.gridx = 10;
+		gbc_btnNewButton.gridy = 5;
+		getContentPane().add(addZone, gbc_btnNewButton);
+		
+		JButton deleteZone = new JButton("Delete Zone");
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_1.gridx = 10;
+		gbc_btnNewButton_1.gridy = 6;
+		getContentPane().add(deleteZone, gbc_btnNewButton_1);
 	}
 	
 	public void addZone(int startPos) {
