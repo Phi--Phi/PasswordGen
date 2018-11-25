@@ -36,11 +36,13 @@ public class CharacterBox extends JTextField {
 		    @Override
 		    public void keyPressed(KeyEvent evt) {
 		    	int e = evt.getKeyCode();
-		    	if (e == KeyEvent.VK_BACK_SPACE || e == KeyEvent.VK_DELETE) {
+		    	if (e == KeyEvent.VK_BACK_SPACE) {
+		    		setText("xx");
+		    	}else if(e != KeyEvent.VK_ALPHANUMERIC) {
 		    		setText("x");
 		    	}
 		    	else {
-		    		setText(String.valueOf(evt.getKeyChar()));
+		    		setText("");
 		    	}
 		    }
 		}); 
