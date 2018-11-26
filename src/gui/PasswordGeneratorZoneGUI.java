@@ -15,7 +15,7 @@
 
 package gui;
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -31,7 +31,6 @@ import javax.swing.JPanel;
 
 import gui.element.CharacterBox;
 import gui.element.ZoneSpec;
-import main.RandomGeneratorMain;
 
 public class PasswordGeneratorZoneGUI extends JFrame {
 
@@ -42,7 +41,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	// private static final int MAX_ZONES = 30;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
-	private JPanel characters, zoneMadness;
+	private JPanel characters,zoneMadness;
 	private Vector<CharacterBox> boxes;
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
@@ -73,7 +72,6 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		getContentPane().setLayout(gridBagLayout);
 
 		characters = new JPanel();
-		characters.setBackground(Color.GREEN);
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 10;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
@@ -83,6 +81,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		getContentPane().add(characters, gbc_panel_1);
 
 		zoneMadness = new JPanel();
+		zoneMadness.setLayout(new BorderLayout());
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
 		gbc_panel_2.gridwidth = 11;
 		gbc_panel_2.insets = new Insets(0, 0, 5, 5);
@@ -166,8 +165,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 			gbc_panel.gridx = 1;
 			gbc_panel.gridy = 4;
 			getContentPane().add(specs.elementAt(i), gbc_panel);
-			specs.elementAt(i).getZone().setSize(zoneMadness.getSize());
-			zoneMadness.add(specs.elementAt(i).getZone());
+			zoneMadness.add(specs.elementAt(i).getZone(), BorderLayout.CENTER);
 		}
 	}
 	

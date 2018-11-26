@@ -18,16 +18,18 @@ package gui.element;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
-import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import gui.PasswordGeneratorZoneGUI;
 
-public class Zone extends JComponent {
+public class Zone extends JPanel {
 
 	/**
 	 * 
@@ -130,9 +132,11 @@ public class Zone extends JComponent {
 	private volatile JRectangle left, right;
 
 	public Zone(int segments, PasswordGeneratorZoneGUI parent) {
+		setLayout(new GridBagLayout());
 		this.parent = parent;
 		setOpaque(false);
 		setSize(segments);
+		
 	}
 
 	public Zone(int segments, int start, PasswordGeneratorZoneGUI parent) {
@@ -154,7 +158,27 @@ public class Zone extends JComponent {
 		totalSegments = size;
 		startSegment = 0;
 		endSegment = totalSegments;
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.weightx = 0.3;
+		gbc.weighty = 0.3;
+		for(int i = 0; i < totalSegments * 2; i++) {
+			JLabel emptyness = new JLabel("k");
+			emptyness.setOpaque(false);
+			emptyness.setBackground(Color.LIGHT_GRAY);
+			gbc.gridx = i;
+			
+			add(emptyness, gbc);
+			
+		}
 		
+		gbc.gridx = startSegment * 2;
+		add(left, gbc);
+		gbc.gridx = ((endSegment - 1) * 2)-1;
+		add(right, gbc);
 	}
 
 	public synchronized void moveStart(int newstart) {
@@ -168,15 +192,15 @@ public class Zone extends JComponent {
 	}
 
 	public void paint(Graphics g) {
-		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX());
-		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX());
+		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX()) + 1;
+		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX()) - 1;
 		int y = Math.round((getHeight() * 0.5f) + getY());
 		int y2 = Math.round((getHeight() * 0.85f) +getY());
+		int y1 = y-(y2-y);
 		g.setColor(Color.BLACK);
 		g.drawLine(x1, y, x2, y);
-		g.drawLine(x1, y2, x1, y2);
-		g.drawLine(x2, y2, x2, y2);
-		
+		g.drawLine(x1, y1, x1, y2);
+		g.drawLine(x2, y1, x2, y2);
 	}
 
 }
