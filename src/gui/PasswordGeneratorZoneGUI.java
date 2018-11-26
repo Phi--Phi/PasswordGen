@@ -21,6 +21,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -50,12 +52,11 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		initialize();
 		parent = rgo;
 		resetZones();
-
 		// panel = new JPanel();
 		setVisible(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
-		setTitle(RandomGeneratorMain.TITLE);
+		setTitle("Advanced Options");
 		// add(panel);
 		pack();
 	}
@@ -90,7 +91,12 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_2.gridy = 2;
 		getContentPane().add(zoneMadness, gbc_panel_2);
 
-		
+		JButton goBack = new JButton("Go Back");
+		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
+		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
+		gbc_btnNewButton_2.gridx = 10;
+		gbc_btnNewButton_2.gridy = 4;
+		getContentPane().add(goBack, gbc_btnNewButton_2);
 
 		JButton addZone = new JButton("Add Zone");
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -105,7 +111,21 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_btnNewButton_1.gridx = 10;
 		gbc_btnNewButton_1.gridy = 6;
 		getContentPane().add(deleteZone, gbc_btnNewButton_1);
+	
+		
+		goBack.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				pack();
+				parent.setVisible(true);
+
+			}
+
+		});
 	}
+	
 
 	public void addZone(int startPos) {
 		ZoneSpec temp = new ZoneSpec(this);
