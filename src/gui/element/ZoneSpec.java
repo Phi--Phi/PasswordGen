@@ -28,13 +28,11 @@ public class ZoneSpec extends JPanel {
 	 */
 	private static final long serialVersionUID = -375743799737480566L;
 	private JCheckBox lower, upper, number, special;
-	private int size;
 	private Zone z;
 	
-	public ZoneSpec(PasswordGeneratorZoneGUI parent) {
-		size = 0;
+	public ZoneSpec(PasswordGeneratorZoneGUI parent, int numChars) {
 		setupOptions();
-		z = new Zone(size, parent);
+		z = new Zone(numChars, parent);
 	}
 	
 	/**
@@ -59,11 +57,6 @@ public class ZoneSpec extends JPanel {
 	
 	public Zone getZone() {
 		return z;
-	}
-	
-	public void setSize(int size) {
-		this.size = size;
-		z.setSize(size);
 	}
 	
 	/**
@@ -108,10 +101,6 @@ public class ZoneSpec extends JPanel {
 		
 		return number.isSelected();
 		
-	}
-	
-	public int getNumberOfCharacters() {
-		return size;
 	}
 	
 	public synchronized void moveStart (int newstart) {

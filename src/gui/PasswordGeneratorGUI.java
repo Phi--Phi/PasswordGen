@@ -31,7 +31,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import gui.element.Zone;
 import gui.element.ZoneSpec;
 import main.RandomGeneratorMain;
 
@@ -182,7 +181,7 @@ public class PasswordGeneratorGUI extends JFrame {
 					alphabet.add('?');
 
 				}
-				for(int k = 0; k < z.getNumberOfCharacters(); k++) {
+				for(int k = 0; k < z.getZone().getLength(); k++) {
 					sb.append(alphabet.get(rand.nextInt(alphabet.size())));
 				}
 

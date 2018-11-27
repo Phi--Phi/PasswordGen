@@ -191,6 +191,10 @@ public class Zone extends JPanel {
 		repaint();
 	}
 
+	public synchronized int getLength() {
+		return endSegment - startSegment;
+	}
+	
 	public void paint(Graphics g) {
 		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX()) + 1;
 		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX()) - 1;
