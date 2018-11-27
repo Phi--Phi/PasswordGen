@@ -23,6 +23,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -38,7 +40,6 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 5435024379805897010L;
-	// private static final int MAX_ZONES = 30;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
 	private JPanel characters,zoneMadness;
@@ -51,12 +52,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		initialize();
 		parent = rgo;
 		resetZones();
-		// panel = new JPanel();
 		setVisible(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setTitle("Advanced Options");
-		// add(panel);
 		pack();
 	}
 
@@ -127,10 +126,27 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	
 
 	public void addZone(int startPos) {
-		ZoneSpec temp = new ZoneSpec(this);
-		temp.setSize(parent.getNumberOfCharacters());
+		ZoneSpec temp = new ZoneSpec(this,parent.getNumberOfCharacters());
+		temp.getZone().setSize(parent.getNumberOfCharacters());
 		temp.moveStart(startPos);
 		temp.moveEnd(startPos + 1);
+		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();) {
+			ZoneSpec temp2 = i.next();
+			temp2.setVisible(false);
+			
+		}
+		temp.setVisible(true);
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.gridwidth = 7;
+		gbc_panel.gridheight = 4;
+		gbc_panel.insets = new Insets(0, 0, 0, 5);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 1;
+		gbc_panel.gridy = 4;
+		getContentPane().add(temp, gbc_panel);
+		zoneMadness.add(temp.getZone(), BorderLayout.CENTER);
+		specs.add(temp);
+		
 	}
 
 	/**
@@ -138,10 +154,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	 * checked
 	 */
 	public synchronized void resetZones() {
-		ZoneSpec temp = new ZoneSpec(this);
+		ZoneSpec temp = new ZoneSpec(this, parent.getNumberOfCharacters());
 		CharacterBox temp2;
 		
-		temp.setSize(parent.getNumberOfCharacters());
+		temp.getZone().setSize(parent.getNumberOfCharacters());
 		characters.removeAll();
 		zoneMadness.removeAll();
 		characters.setLayout(new GridLayout(1, parent.getNumberOfCharacters()));
@@ -188,6 +204,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 			}
 		}
 		return index;
+	}
+
+	public List<ZoneSpec> getZones() {
+		return specs;
 	}
 	
 }

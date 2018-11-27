@@ -99,8 +99,8 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//setVisible(false);
-				//generate(null);
+				setVisible(false);
+				generate(zonegui.getZones());
 
 			}
 
@@ -244,15 +244,12 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 					throw new OptionSelectException();
 
-				} else {
-
-					pgen.generate(zones);
-
-				}
+				} 
 			} catch (OptionSelectException e) {
 				JOptionPane.showMessageDialog(this, "An option must be selected");
 				setVisible(true);
 			}
+			pgen.generate(zones);
 		}
 	}
 
