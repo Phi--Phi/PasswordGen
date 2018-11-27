@@ -9,8 +9,8 @@ public class ZoneGUITesting{
 	@Test
 	public void test() {
 	RandomGeneratorOptionsGUI validate = new RandomGeneratorOptionsGUI();
-	int output = validate.generate(2);
-	assertEquals(7, output);	
+	int output = validate.generate(2); //enter your input
+	assertEquals(7, output);	//enter what is your expected output
 		
 	}
 
