@@ -27,9 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 import gui.element.CharacterBox;
 import gui.element.ZoneSpec;
@@ -88,7 +91,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_2.gridx = 1;
 		gbc_panel_2.gridy = 2;
 		getContentPane().add(zoneMadness, gbc_panel_2);
-
+/*
 		JButton goBack = new JButton("Go Back");
 		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
 		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
@@ -109,6 +112,50 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_btnNewButton_1.gridx = 10;
 		gbc_btnNewButton_1.gridy = 6;
 		getContentPane().add(deleteZone, gbc_btnNewButton_1);
+	*/
+		JPanel buttonPanel = new JPanel();
+		GridBagConstraints gbc_buttonPanel = new GridBagConstraints();
+		gbc_buttonPanel.gridwidth = 4;
+		gbc_buttonPanel.gridheight = 3;
+		gbc_buttonPanel.insets = new Insets(0, 0, 5, 5);
+		gbc_buttonPanel.fill = GridBagConstraints.BOTH;
+		gbc_buttonPanel.gridx = 6;
+		gbc_buttonPanel.gridy = 3;
+		getContentPane().add(buttonPanel, gbc_buttonPanel);
+		buttonPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		
+		JPanel buttonPanel2 = new JPanel();
+		buttonPanel.add(buttonPanel2);
+		
+		JButton addZone = new JButton("   Add Zone  ");
+		JButton deleteZone = new JButton("Delete Zone");
+		JButton goBack = new JButton("    Go Back   ");
+		
+		GroupLayout groupLayout_buttonPanel = new GroupLayout(buttonPanel2);
+		groupLayout_buttonPanel.setHorizontalGroup(
+				groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout_buttonPanel.createSequentialGroup()
+						
+					
+					.addGroup(groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(goBack, Alignment.TRAILING)
+						.addComponent(deleteZone, Alignment.TRAILING)
+						.addComponent(addZone, Alignment.TRAILING))
+					.addContainerGap(26, Short.MAX_VALUE)
+				//	.addContainerGap())
+		));
+		groupLayout_buttonPanel.setVerticalGroup(
+				groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout_buttonPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(goBack)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(deleteZone)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(addZone)
+					.addContainerGap(16, Short.MAX_VALUE))
+		);
+		buttonPanel2.setLayout(groupLayout_buttonPanel);
 	
 		
 		goBack.addActionListener(new ActionListener() {
@@ -123,7 +170,6 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 
 		});
 	}
-	
 
 	public void addZone(int startPos) {
 		ZoneSpec temp = new ZoneSpec(this,parent.getNumberOfCharacters());
