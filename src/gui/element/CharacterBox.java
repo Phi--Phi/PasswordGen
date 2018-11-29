@@ -32,6 +32,7 @@ public class CharacterBox extends JTextField {
 		// textField used that sets the width of the textbox to three
 		setFont(new Font("Trebuchet MS", Font.PLAIN, 30));
 		setEditable(false);
+		setText("x");
 	
 		// Key stroke listener, when the user enters the enter key or up, down, left, right arrow keys
 		// the program will take the last character the user enters

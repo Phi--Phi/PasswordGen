@@ -45,13 +45,23 @@ public class Zone extends JPanel {
 		private volatile boolean dragging = false;
 		public static final int LEFT = -1, RIGHT = 1;
 		private int direction;
+		private Zone z;
 
-		public JRectangle(Cursor c, int direction) {
+		public JRectangle(Cursor c, int direction, Zone p) {
 			setCursor(c);
 			setOpaque(false);
 			this.direction = direction;
 			addMouseMotionListener(this);
 			addMouseListener(this);
+			z=p;
+		}
+		
+		public int getWidth() {
+			return z.getWidth();
+		}
+		
+		public int getX() {
+			return z.getX();
 		}
 
 		@Override
@@ -150,8 +160,9 @@ public class Zone extends JPanel {
 	}
 
 	public synchronized void setSize(int size) {
-		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR), JRectangle.LEFT);
-		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR), JRectangle.RIGHT);
+		
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR), JRectangle.LEFT, this);
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR), JRectangle.RIGHT, this);
 		left.setSize((int) ((getWidth()*0.5)/size), getHeight());
 		right.setSize(left.getWidth(), getHeight());
 		
@@ -166,23 +177,48 @@ public class Zone extends JPanel {
 		gbc.weightx = 0.3;
 		gbc.weighty = 0.3;
 		for(int i = 0; i < totalSegments * 2; i++) {
-			JLabel emptyness = new JLabel("k");
+			JLabel emptyness = new JLabel();
 			emptyness.setOpaque(false);
-			emptyness.setBackground(Color.LIGHT_GRAY);
 			gbc.gridx = i;
 			
 			add(emptyness, gbc);
 			
 		}
 		
-		gbc.gridx = startSegment * 2;
+		gbc.gridx = (startSegment * 2);
 		add(left, gbc);
 		gbc.gridx = ((endSegment - 1) * 2)-1;
 		add(right, gbc);
 	}
 
 	public synchronized void moveStart(int newstart) {
+		int diff = startSegment-newstart;
+		if(diff > 0) {
+			//newstart<startSegment
+			for(int i = startSegment - 1; i >=newstart; i--) {
+				parent.claim(i);
+			}
+		} else if(diff < 0) {
+			//newstart>startSegment
+			for(int i = startSegment; i < newstart; i++) {
+				parent.free(i);
+			}
+		}
 		startSegment = newstart;
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridy = 0;
+		gbc.gridheight = 1;
+		gbc.gridwidth = 1;
+		gbc.weightx = 0.3;
+		gbc.weighty = 0.3;
+		remove(left);
+		remove(right);
+		gbc.gridx = startSegment * 2;
+		add(left, gbc);
+		gbc.gridx = ((endSegment - 1) * 2)-1;
+		add(right, gbc);
+		
 		repaint();
 	}
 
@@ -196,6 +232,7 @@ public class Zone extends JPanel {
 	}
 	
 	public void paint(Graphics g) {
+		super.paint(g);
 		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX()) + 1;
 		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX()) - 1;
 		int y = Math.round((getHeight() * 0.5f) + getY());

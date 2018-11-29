@@ -49,7 +49,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	private Vector<CharacterBox> boxes;
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
-		setMinimumSize(new Dimension(500, 300));
+		setMinimumSize(new Dimension(800, 400));
 		specs = new Vector<ZoneSpec>();
 		boxes = new Vector<CharacterBox>();
 		initialize();
@@ -58,6 +58,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		setVisible(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
+		setResizable(false);
 		setTitle("Advanced Options");
 		pack();
 	}
@@ -234,7 +235,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	public synchronized int scan(int index, int direction) {
 		if(direction > 0) {
 			for (int i = index+1; i < boxes.size(); i++) {
-				if(boxes.get(i).isEditable()) {
+				if(boxes.elementAt(i).isEditable()) {
 					index = i;
 				} else {
 					return index;
@@ -242,7 +243,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 			}
 		} else if (direction < 0) {
 			for(int i = index -1; i >=0; i--) {
-				if(boxes.get(i).isEditable()) {
+				if(boxes.elementAt(i).isEditable()) {
 					index = i;
 				} else {
 					return index;
@@ -254,6 +255,16 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 
 	public List<ZoneSpec> getZones() {
 		return specs;
+	}
+
+	public void claim(int i) {
+		boxes.elementAt(i).setEditable(false);
+		boxes.elementAt(i).setText("x");
+	}
+
+	public void free(int i) {
+		boxes.elementAt(i).setEditable(true);
+		boxes.elementAt(i).setText("");
 	}
 	
 }
