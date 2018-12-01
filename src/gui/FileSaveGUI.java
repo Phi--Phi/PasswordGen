@@ -30,55 +30,31 @@ class FileSaveGUI implements ActionListener {
 		
 		chooser.showSaveDialog(null);
 		
-		if(obj.getActionCommand()== parent.saveBtn.getActionCommand()) {
-			
+		if(obj.getActionCommand()== parent.saveBtn.getActionCommand())
 			try {
-				//save the file:
 				File file = chooser.getSelectedFile();
 				FileWriter outfile;
 				int overwrite;
 				FileFilter filter = chooser.getFileFilter();
-				
-				
-				//type file
 				System.out.println(file.getName());
-				if(filter.equals(txt)) {
-					if(!file.getName().endsWith(".txt")){
-						file = new File(file.getPath()+".txt");
-				}			
-					
-
-				}	
-				if(filter.equals(csv))  {
-
-						if(!file.getName().endsWith(".csv")){
-							file = new File(file.getPath()+".csv");
-
-					}			
-				}
-				
-				if(file.exists()) {
-					overwrite = JOptionPane.showConfirmDialog(null, "The file " + file.getName() + 
-							" already exisits.\nAre you sure you want to overwrite it?", 
+				if (filter.equals(txt) && !file.getName().endsWith(".txt"))
+					file = new File(file.getPath() + ".txt");
+				if (filter.equals(csv) && !file.getName().endsWith(".csv"))
+					file = new File(file.getPath() + ".csv");
+				if (file.exists()) {
+					overwrite = JOptionPane.showConfirmDialog(null,
+							"The file " + file.getName() + " already exisits.\nAre you sure you want to overwrite it?",
 							"File exsists", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-					if(overwrite != JOptionPane.YES_OPTION) {
+					if (overwrite != JOptionPane.YES_OPTION)
 						throw new NullPointerException();
-					}
-					
 				}
-				
 				outfile = new FileWriter(file);
 				outfile.write(parent.password.getText());
 				outfile.flush();
 				outfile.close();
-				
 			} catch (NullPointerException e) {
-				//this happens when the user clicks cancel
-				//or programmatically from attempting to overwrite a file,
-				//so no action is required
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null,e+"");
+				JOptionPane.showMessageDialog(null, e + "");
 			}
-		}
 	
 }}
