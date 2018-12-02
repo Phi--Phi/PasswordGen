@@ -151,14 +151,21 @@ public class Zone extends JPanel {
 		
 	}
 
-	public Zone(int segments, int start, PasswordGeneratorZoneGUI parent) {
-		this(segments, parent);
-		startSegment = start;
-	}
-
 	public Zone(int segments, int start, int end, PasswordGeneratorZoneGUI parent) {
-		this(segments, start, parent);
+		totalSegments = segments;
+		startSegment = start;
 		endSegment = end;
+		contentPane = new JPanel();
+		contentPane.setOpaque(false);
+		contentPane.setVisible(true);
+		setLayout(new GridBagLayout());
+		contentPane.setLayout(new BorderLayout());
+		width = 0; height = 0;
+		this.parent = parent;
+		setOpaque(false);
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR), JRectangle.LEFT, this);
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR), JRectangle.RIGHT, this);
+		addLeftRight();
 	}
 
 	public synchronized void setSize(int size) {

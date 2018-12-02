@@ -23,16 +23,17 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.GroupLayout;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 
 import gui.element.CharacterBox;
 import gui.element.ZoneSpec;
@@ -43,6 +44,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
 	private JPanel characters,zoneMadness;
+	private JButton AddZone, RemoveZone, GoBack;
 	private Vector<CharacterBox> boxes;
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
@@ -98,44 +100,31 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_buttonPanel.gridx = 6;
 		gbc_buttonPanel.gridy = 3;
 		getContentPane().add(buttonPanel, gbc_buttonPanel);
-		buttonPanel.setLayout(new GridLayout(1, 0, 0, 0));
+		buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.PAGE_AXIS));
 		
-		JPanel buttonPanel2 = new JPanel();
-		buttonPanel.add(buttonPanel2);
+		AddZone = new JButton("   Add Zone  ");
+		RemoveZone = new JButton("Delete Zone");
+		GoBack = new JButton("    Go Back   ");
 		
-		JButton addZone = new JButton("   Add Zone  "), deleteZone = new JButton("Delete Zone"),
-				goBack = new JButton("    Go Back   ");
-		GroupLayout groupLayout_buttonPanel = new GroupLayout(buttonPanel2);
-		groupLayout_buttonPanel.setHorizontalGroup(
-				groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout_buttonPanel.createSequentialGroup()
-						
-					
-					.addGroup(groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
-						.addComponent(goBack, Alignment.TRAILING)
-						.addComponent(deleteZone, Alignment.TRAILING)
-						.addComponent(addZone, Alignment.TRAILING))
-					.addContainerGap(26, Short.MAX_VALUE)
-				//	.addContainerGap())
-		));
-		groupLayout_buttonPanel.setVerticalGroup(
-				groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout_buttonPanel.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(goBack)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(deleteZone)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(addZone)
-					.addContainerGap(16, Short.MAX_VALUE))
-		);
-		buttonPanel2.setLayout(groupLayout_buttonPanel);
-	
+		buttonPanel.add(Box.createRigidArea(new Dimension(16,16)));
+		buttonPanel.add(AddZone);
+		buttonPanel.add(Box.createRigidArea(new Dimension(16,16)));
+		buttonPanel.add(RemoveZone);
+		buttonPanel.add(Box.createRigidArea(new Dimension(16,16)));
+		buttonPanel.add(GoBack);
 		
-		goBack.addActionListener(new ActionListener() {
+		AddZone.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addZone(getSelectedStart());
+			}
+		});
+		
+		GoBack.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent e) {
 				setVisible(false);
 				pack();
 				parent.setVisible(true);
@@ -144,12 +133,14 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 
 		});
 	}
-
+	
+	/**
+	 * Add a zone at the specified startPos index.
+	 * @param startPos the index of the zone to add
+	 */
 	public void addZone(int startPos) {
-		ZoneSpec temp = new ZoneSpec(this,parent.getNumberOfCharacters());
-		temp.getZone().setSize(parent.getNumberOfCharacters());
-		temp.moveStart(startPos);
-		temp.moveEnd(startPos + 1);
+		AddZone.setEnabled(false);
+		ZoneSpec temp = new ZoneSpec(this,parent.getNumberOfCharacters(),startPos,startPos+1);
 		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();)
 			i.next().setVisible(false);
 		temp.setVisible(true);
@@ -163,9 +154,22 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		getContentPane().add(temp, gbc_panel);
 		zoneMadness.add(temp.getZone(), BorderLayout.CENTER);
 		specs.add(temp);
+		boxes.elementAt(startPos).setEditable(false);
+		boxes.elementAt(startPos).setText("x");
 		
 	}
-
+	
+	private int getSelectedStart() {
+		int j = 0;
+		for(Iterator<CharacterBox> i = boxes.iterator(); i.hasNext();) {
+			if(i.next().isSelected()) {
+				return j;
+			}
+			j++;
+		}
+		return j;
+	}
+	
 	/**
 	 * clears all zone configuration and resets it to one zone with lowercase
 	 * checked
@@ -184,6 +188,46 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 			temp2 = new CharacterBox();
 			boxes.add(temp2);
 			characters.add(temp2);
+			temp2.addMouseListener((new MouseListener() {
+
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					CharacterBox source = ((CharacterBox)e.getSource());
+					for(Iterator<CharacterBox> j = boxes.iterator(); j.hasNext();) {
+						j.next().deselect();
+					}
+					source.select();
+					if(source.isEditable()) {
+						AddZone.setEnabled(true);
+					} else {
+						AddZone.setEnabled(false);
+					}
+				}
+
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mousePressed(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			}));
 		}
 		
 		specs.clear();
@@ -200,6 +244,9 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 			getContentPane().add(specs.elementAt(i), gbc_panel);
 			zoneMadness.add(specs.elementAt(i).getZone(), BorderLayout.CENTER);
 		}
+		RemoveZone.setEnabled(false);
+		AddZone.setEnabled(false);
+		GoBack.setEnabled(canGoBack());
 	}
 	
 	public synchronized int scan(int index, int direction) {
@@ -225,14 +272,44 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		return specs;
 	}
 
-	public void claim(int i) {
-		boxes.elementAt(i).setEditable(false);
-		boxes.elementAt(i).setText("x");
+	public synchronized void claim(int i) {
+		CharacterBox temp = boxes.elementAt(i);
+		temp.setEditable(false);
+		temp.setText("x");
+		if(temp.isSelected()) {
+			AddZone.setEnabled(false);
+		}
+		
+		GoBack.setEnabled(canGoBack());
 	}
 
-	public void free(int i) {
-		boxes.elementAt(i).setEditable(true);
-		boxes.elementAt(i).setText("");
+	public synchronized void free(int i) {
+		CharacterBox temp = boxes.elementAt(i);
+		temp.setEditable(true);
+		temp.setText("");
+		if(temp.isSelected()) {
+			AddZone.setEnabled(true);
+		}
+		GoBack.setEnabled(false);
 	}
 	
+	
+	public synchronized boolean canGoBack() {
+		boolean canGoBack = true;
+		CharacterBox temp;
+		ZoneSpec temp2;
+		for(Iterator<CharacterBox> i = boxes.iterator(); i.hasNext();) {
+			temp = i.next();
+			if(temp.isEditable() && temp.getText().equals("")) {
+				canGoBack = false;
+			}
+		}
+		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();) {
+			temp2 = i.next();
+			if(!temp2.lowercase() && !temp2.uppercase() && !temp2.specialCharacters() && !temp2.numbers()) {
+				canGoBack = false;
+			}
+		}
+		return canGoBack;
+	}
 }

@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 public class CharacterBox extends JTextField {
 	
 	private static final long serialVersionUID = -0x29DAAB52E51465AL;
+	private boolean selected = false;
 
 	public CharacterBox() {
 		// textField used that sets the width of the textbox to three
@@ -44,6 +45,20 @@ public class CharacterBox extends JTextField {
 								|| e == KeyEvent.VK_PAGE_UP || e == KeyEvent.VK_END || e == KeyEvent.VK_HOME
 								|| e == KeyEvent.VK_INSERT ? "x" : "");
 		    }
-		}); 
+		});
 	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void deselect() {
+		selected = false;
+	}
+	
+	public void select() {
+		System.out.println("Selected!");
+		selected = true;
+	}
+	
 }
