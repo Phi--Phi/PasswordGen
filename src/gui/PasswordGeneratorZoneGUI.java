@@ -92,28 +92,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_2.gridx = 1;
 		gbc_panel_2.gridy = 2;
 		getContentPane().add(zoneMadness, gbc_panel_2);
-/*
-		JButton goBack = new JButton("Go Back");
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_2.gridx = 10;
-		gbc_btnNewButton_2.gridy = 4;
-		getContentPane().add(goBack, gbc_btnNewButton_2);
-
-		JButton addZone = new JButton("Add Zone");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton.gridx = 10;
-		gbc_btnNewButton.gridy = 5;
-		getContentPane().add(addZone, gbc_btnNewButton);
-
-		JButton deleteZone = new JButton("Delete Zone");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 5, 5);
-		gbc_btnNewButton_1.gridx = 10;
-		gbc_btnNewButton_1.gridy = 6;
-		getContentPane().add(deleteZone, gbc_btnNewButton_1);
-	*/
+		
 		JPanel buttonPanel = new JPanel();
 		GridBagConstraints gbc_buttonPanel = new GridBagConstraints();
 		gbc_buttonPanel.gridwidth = 4;
@@ -234,12 +213,13 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	
 	public synchronized int scan(int index, int direction) {
 		if(direction > 0) {
-			for (int i = index+1; i < boxes.size(); i++) {
+			for (int i = index; i < boxes.size(); i++) {
 				if(boxes.elementAt(i).isEditable()) {
 					index = i;
 				} else {
 					return index;
 				}
+				if(index == boxes.size() -1) index = boxes.size();
 			}
 		} else if (direction < 0) {
 			for(int i = index -1; i >=0; i--) {
