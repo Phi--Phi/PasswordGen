@@ -36,10 +36,7 @@ import main.RandomGeneratorMain;
 
 public class PasswordGeneratorGUI extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1442493858262690625L;
+	private static final long serialVersionUID = -0x1404C4857C6E2B41L;
 
 	private JPanel panel;
 	// visibility is set to package
@@ -117,9 +114,9 @@ public class PasswordGeneratorGUI extends JFrame {
 	 * The generated password list is immediately displayed to the user
 	 * </p>
 	 * 
-	 * @param zones
+	 * @param ss
 	 */
-	public synchronized void generate(List<ZoneSpec> zones) {
+	public synchronized void generate(List<ZoneSpec> ss) {
 
 		ArrayList<Character> alphabet = new ArrayList<Character>();
 		Random rand = new Random();
@@ -127,37 +124,19 @@ public class PasswordGeneratorGUI extends JFrame {
 		ZoneSpec z;
 
 		options.pack();
-		for (int i = 0; i < options.getNumberOfPasswords(); i++) {
-			for (Iterator<ZoneSpec> j = zones.iterator(); j.hasNext();) {
+		for (int i = 0; i < options.getNumberOfPasswords(); ++i) {
+			for (Iterator<ZoneSpec> j = ss.iterator(); j.hasNext();) {
 				z = j.next();
 				alphabet.clear();
-				if (z.lowercase()) {
-
-					for (char c = 'a'; c <= 'z'; c++) {
-
+				if (z.lowercase())
+					for (char c = 'a'; c <= 'z'; ++c)
 						alphabet.add(c);
-
-					}
-
-				}
-				if (z.uppercase()) {
-
-					for (char c = 'A'; c <= 'Z'; c++) {
-
+				if (z.uppercase())
+					for (char c = 'A'; c <= 'Z'; ++c)
 						alphabet.add(c);
-
-					}
-
-				}
-				if (z.numbers()) {
-
-					for (char c = '0'; c <= '9'; c++) {
-
+				if (z.numbers())
+					for (char c = '0'; c <= '9'; ++c)
 						alphabet.add(c);
-
-					}
-
-				}
 				if (z.specialCharacters()) {
 
 					alphabet.add('!');
@@ -181,9 +160,8 @@ public class PasswordGeneratorGUI extends JFrame {
 					alphabet.add('?');
 
 				}
-				for(int k = 0; k < z.getZone().getLength(); k++) {
+				for(int k = 0; k < z.getZone().getLength(); ++k)
 					sb.append(alphabet.get(rand.nextInt(alphabet.size())));
-				}
 
 			}
 			sb.append("\n");
