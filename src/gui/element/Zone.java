@@ -34,21 +34,15 @@ import gui.PasswordGeneratorZoneGUI;
 
 public class Zone extends JPanel {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -631615879959579539L;
+	private static final long serialVersionUID = -0x8C3F34BDF7C8B93L;
 
 	public class JRectangle extends JPanel implements MouseMotionListener, MouseListener {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 7998903397632243199L;
-		private volatile boolean dragging = false;
+		private static final long serialVersionUID = 0x6F01D0429888F5FFL;
+		private volatile boolean dragging;
 		public static final int LEFT = -1, RIGHT = 1;
 		private int direction;
-		private int oldStart = 0, oldEnd = 0;
+		private int oldStart, oldEnd;
 		private Zone z;
 
 		public JRectangle(Cursor c, int direction, Zone p) {
@@ -70,26 +64,23 @@ public class Zone extends JPanel {
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			if (dragging) {
-				double mx = e.getX();
-				double length = width / totalSegments;
-				double x1 = length * startSegment;
-				double x2 = length * (endSegment-1);
-				int index, lb, ub;
-
-				if ((mx < x1 || mx > x1) && direction == LEFT) {
-					ub = endSegment - 1;
-					lb = parent.scan(startSegment, LEFT);
-					index = (int) Math.round(mx / length)+oldStart;
-					if(index <= ub && index >= lb)
-						moveStart(index);
-				} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
-					ub = parent.scan(endSegment, RIGHT);
-					lb = startSegment + 1;
-					index = (int) Math.round(mx / length) + oldEnd;
-					if(index <= ub && index >= lb)
-						moveEnd(index);
-				}
+			if (!dragging)
+				return;
+			double mx = e.getX(), length = width / totalSegments, x1 = length * startSegment,
+					x2 = length * (endSegment - 1);
+			int index, lb, ub;
+			if ((mx < x1 || mx > x1) && direction == LEFT) {
+				ub = endSegment - 1;
+				lb = parent.scan(startSegment, LEFT);
+				index = oldStart + (int) Math.round(mx / length);
+				if (index <= ub && index >= lb)
+					moveStart(index);
+			} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
+				ub = parent.scan(endSegment, RIGHT);
+				lb = startSegment + 1;
+				index = oldEnd + (int) Math.round(mx / length);
+				if (index <= ub && index >= lb)
+					moveEnd(index);
 			}
 		}
 
@@ -118,16 +109,12 @@ public class Zone extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			double mx = e.getX();
-			double length = width / totalSegments;
-			double x1 = (length * startSegment);
-			double x2 = (length * endSegment);
-
-			if ((mx < x1 || mx > x1) && direction == LEFT) {
-				oldStart=startSegment;
+			double mx = e.getX(), length = width / totalSegments;
+			if ((mx < length * startSegment || mx > length * startSegment) && direction == LEFT) {
+				oldStart = startSegment;
 				dragging = true;
-			} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
-				oldEnd=endSegment;
+			} else if ((mx > length * endSegment || mx < length * endSegment) && direction == RIGHT) {
+				oldEnd = endSegment;
 				dragging = true;
 			}
 
@@ -157,7 +144,7 @@ public class Zone extends JPanel {
 		contentPane.setVisible(true);
 		setLayout(new GridBagLayout());
 		contentPane.setLayout(new BorderLayout());
-		width = 0; height = 0;
+		height = width = 0;
 		this.parent = parent;
 		setOpaque(false);
 		setSize(segments);
@@ -186,8 +173,7 @@ public class Zone extends JPanel {
 	}
 	
 	public void addLeftRight() {
-		int outside;
-		int leftInset,rightInset;
+		int outside, leftInset, rightInset;
 		JLabel label = new JLabel();
 		GridBagConstraints gbc = new GridBagConstraints();
 		leftInset = width/totalSegments;
@@ -195,8 +181,7 @@ public class Zone extends JPanel {
 		rightInset = width/totalSegments;
 		rightInset*=totalSegments-endSegment;
 		gbc.fill=GridBagConstraints.BOTH;
-		gbc.weightx = 0.3;
-		gbc.weighty = 0.3;
+		gbc.weighty = gbc.weightx = 0.3;
 		gbc.gridheight = 1;
 		gbc.gridy = 0;
 		gbc.gridwidth = getLength();
@@ -215,17 +200,12 @@ public class Zone extends JPanel {
 	
 	public synchronized void moveStart(int newstart) {
 		int diff = startSegment-newstart;
-		if(diff > 0) {
-			//newstart<startSegment
-			for(int i = startSegment - 1; i >=newstart; i--) {
+		if(diff > 0)
+			for (int i = startSegment - 1; i >= newstart; --i)
 				parent.claim(i);
-			}
-		} else if(diff < 0) {
-			//newstart>startSegment
-			for(int i = startSegment; i < newstart; i++) {
+		else if(diff < 0)
+			for (int i = startSegment; i < newstart; ++i)
 				parent.free(i);
-			}
-		}
 		startSegment = newstart;
 		addLeftRight();
 		repaint();
@@ -233,17 +213,12 @@ public class Zone extends JPanel {
 
 	public synchronized void moveEnd(int newend) {
 		int diff = endSegment-newend;
-		if(diff > 0) {
-			//newend<endSegment
-			for(int i = endSegment - 1; i >= newend; i--) {
+		if(diff > 0)
+			for (int i = endSegment - 1; i >= newend; --i)
 				parent.free(i);
-			}
-		} else if(diff < 0) {
-			//newend>endSegment
-			for(int i = endSegment; i < newend; i++) {
+		else if(diff < 0)
+			for (int i = endSegment; i < newend; ++i)
 				parent.claim(i);
-			}
-		}
 		endSegment = newend;
 		addLeftRight();
 		repaint();
@@ -255,11 +230,10 @@ public class Zone extends JPanel {
 	
 	public void paint(Graphics g) {
 		super.paint(g);
-		int x1 = Math.round((((float) getWidth() / totalSegments) * startSegment) + getX()) + 1;
-		int x2 = Math.round((((float) getWidth() / totalSegments) * endSegment) + getX()) - 1;
-		int y = Math.round((getHeight() * 0.5f) + getY());
-		int y2 = Math.round((getHeight() * 0.85f) +getY());
-		int y1 = y-(y2-y);
+		int x1 = Math.round(startSegment * (float) getWidth() / totalSegments + getX()) + 1,
+				x2 = Math.round(endSegment * (float) getWidth() / totalSegments + getX()) - 1,
+				y = Math.round(0.5f * getHeight() + getY()), y2 = Math.round(0.85f * getHeight() + getY()),
+				y1 = y + y - y2;
 		g.setColor(Color.BLACK);
 		g.drawLine(x1, y, x2, y);
 		g.drawLine(x1, y1, x1, y2);
