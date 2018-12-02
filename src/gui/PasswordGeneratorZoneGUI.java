@@ -262,7 +262,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 				if (!boxes.elementAt(i).isEditable())
 					return index;
 				index = i;
-				if (index == boxes.size() - 1)
+				if (index < boxes.size() && boxes.elementAt(index).isEditable())
 					index = boxes.size();
 			}
 		return index;
