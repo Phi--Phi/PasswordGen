@@ -39,10 +39,7 @@ import gui.element.ZoneSpec;
 
 public class PasswordGeneratorZoneGUI extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5435024379805897010L;
+	private static final long serialVersionUID = 0x4B6D15E09FEB1132L;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
 	private JPanel characters,zoneMadness;
@@ -79,8 +76,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_1.gridwidth = 10;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 1;
-		gbc_panel_1.gridy = 1;
+		gbc_panel_1.gridy = gbc_panel_1.gridx = 1;
 		getContentPane().add(characters, gbc_panel_1);
 
 		zoneMadness = new JPanel();
@@ -107,10 +103,8 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		JPanel buttonPanel2 = new JPanel();
 		buttonPanel.add(buttonPanel2);
 		
-		JButton addZone = new JButton("   Add Zone  ");
-		JButton deleteZone = new JButton("Delete Zone");
-		JButton goBack = new JButton("    Go Back   ");
-		
+		JButton addZone = new JButton("   Add Zone  "), deleteZone = new JButton("Delete Zone"),
+				goBack = new JButton("    Go Back   ");
 		GroupLayout groupLayout_buttonPanel = new GroupLayout(buttonPanel2);
 		groupLayout_buttonPanel.setHorizontalGroup(
 				groupLayout_buttonPanel.createParallelGroup(Alignment.LEADING)
@@ -156,11 +150,8 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		temp.getZone().setSize(parent.getNumberOfCharacters());
 		temp.moveStart(startPos);
 		temp.moveEnd(startPos + 1);
-		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();) {
-			ZoneSpec temp2 = i.next();
-			temp2.setVisible(false);
-			
-		}
+		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();)
+			i.next().setVisible(false);
 		temp.setVisible(true);
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.gridwidth = 7;
@@ -189,7 +180,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		characters.setLayout(new GridLayout(1, parent.getNumberOfCharacters()));
 		
 		boxes.clear();
-		for (int i = 0; i < parent.getNumberOfCharacters(); i++) {
+		for (int i = 0; i < parent.getNumberOfCharacters(); ++i) {
 			temp2 = new CharacterBox();
 			boxes.add(temp2);
 			characters.add(temp2);
@@ -198,7 +189,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		specs.clear();
 		specs.add(temp);
 		
-		for(int i = 0; i < specs.size(); i++) {
+		for(int i = 0; i < specs.size(); ++i) {
 			GridBagConstraints gbc_panel = new GridBagConstraints();
 			gbc_panel.gridwidth = 7;
 			gbc_panel.gridheight = 4;
@@ -212,24 +203,21 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	}
 	
 	public synchronized int scan(int index, int direction) {
-		if(direction > 0) {
-			for (int i = index; i < boxes.size(); i++) {
-				if(boxes.elementAt(i).isEditable()) {
+		if (direction <= 0) {
+			if (direction < 0)
+				for (int i = index - 1; i >= 0; --i) {
+					if (!boxes.elementAt(i).isEditable())
+						return index;
 					index = i;
-				} else {
-					return index;
 				}
-				if(index == boxes.size() -1) index = boxes.size();
-			}
-		} else if (direction < 0) {
-			for(int i = index -1; i >=0; i--) {
-				if(boxes.elementAt(i).isEditable()) {
-					index = i;
-				} else {
+		} else
+			for (int i = index; i < boxes.size(); ++i) {
+				if (!boxes.elementAt(i).isEditable())
 					return index;
-				}
+				index = i;
+				if (index == boxes.size() - 1)
+					index = boxes.size();
 			}
-		}
 		return index;
 	}
 
