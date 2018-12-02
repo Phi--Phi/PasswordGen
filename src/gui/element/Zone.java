@@ -15,11 +15,11 @@
 
 package gui.element;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -68,9 +68,9 @@ public class Zone extends JPanel {
 		public void mouseDragged(MouseEvent e) {
 			if (dragging) {
 				double mx = e.getX();
-				double length = getWidth() / totalSegments;
-				double x1 = (length * startSegment) + getX();
-				double x2 = (length * endSegment) + getX();
+				double length = width / totalSegments;
+				double x1 = length * startSegment;
+				double x2 = length * (endSegment-1);
 				int index, lb, ub;
 
 				if ((mx < x1 || mx > x1) && direction == LEFT) {
@@ -82,7 +82,7 @@ public class Zone extends JPanel {
 				} else if ((mx > x2 || mx < x2) && direction == RIGHT) {
 					ub = parent.scan(endSegment, RIGHT);
 					lb = startSegment + 1;
-					index = (int) Math.round(mx / length);
+					index = (int) Math.round(mx / length) + totalSegments;
 					if(index <= ub && index >= lb)
 						moveEnd(index);
 				}
@@ -115,8 +115,9 @@ public class Zone extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			double mx = e.getX();
-			double x1 = ((getWidth() / totalSegments) * startSegment) + getX();
-			double x2 = ((getWidth() / totalSegments) * endSegment) + getX();
+			double length = getWidth() / totalSegments;
+			double x1 = (length * startSegment) + getX();
+			double x2 = (length * endSegment) + getX();
 
 			if ((mx < x1 || mx > x1) && direction == LEFT) {
 				dragging = true;
@@ -129,20 +130,29 @@ public class Zone extends JPanel {
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			dragging = false;
+			VALIDATE();
 		}
 
 		public int getDirection() {
 			return direction;
 		}
-
+		
 	}
 
 	private volatile int totalSegments, startSegment, endSegment;
 	private PasswordGeneratorZoneGUI parent;
 	private volatile JRectangle left, right;
+	private JPanel contentPane;
+	private int width, height;
 
 	public Zone(int segments, PasswordGeneratorZoneGUI parent) {
-		setLayout(new GridBagLayout());
+		contentPane = new JPanel();
+		contentPane.setOpaque(false);
+		contentPane.setVisible(true);
+		setLayout(new BorderLayout());
+		add(contentPane, BorderLayout.CENTER);
+		contentPane.setLayout(new BorderLayout());
+		width = 0; height = 0;
 		this.parent = parent;
 		setOpaque(false);
 		setSize(segments);
@@ -161,36 +171,26 @@ public class Zone extends JPanel {
 
 	public synchronized void setSize(int size) {
 		
-		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR), JRectangle.LEFT, this);
-		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR), JRectangle.RIGHT, this);
-		left.setSize((int) ((getWidth()*0.5)/size), getHeight());
-		right.setSize(left.getWidth(), getHeight());
-		
+		left = new JRectangle(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR), JRectangle.LEFT, this);
+		right = new JRectangle(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR), JRectangle.RIGHT, this);
 		totalSegments = size;
 		startSegment = 0;
 		endSegment = totalSegments;
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridy = 0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 0.3;
-		gbc.weighty = 0.3;
-		for(int i = 0; i < totalSegments * 2; i++) {
-			JLabel emptyness = new JLabel();
-			emptyness.setOpaque(false);
-			gbc.gridx = i;
-			
-			add(emptyness, gbc);
-			
-		}
 		
-		gbc.gridx = (startSegment * 2);
-		add(left, gbc);
-		gbc.gridx = ((endSegment - 1) * 2)-1;
-		add(right, gbc);
+		addLeftRight();
 	}
-
+	
+	public void addLeftRight() {
+		int outside = (int) (width/totalSegments);
+		JLabel label = new JLabel();
+		contentPane.removeAll();
+		label.setPreferredSize(new Dimension(width - outside, height));
+		contentPane.add(left, BorderLayout.WEST);
+		contentPane.add(right, BorderLayout.EAST);
+		contentPane.add(label, BorderLayout.CENTER);
+		
+	}
+	
 	public synchronized void moveStart(int newstart) {
 		int diff = startSegment-newstart;
 		if(diff > 0) {
@@ -205,25 +205,25 @@ public class Zone extends JPanel {
 			}
 		}
 		startSegment = newstart;
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.BOTH;
-		gbc.gridy = 0;
-		gbc.gridheight = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 0.3;
-		gbc.weighty = 0.3;
-		remove(left);
-		remove(right);
-		gbc.gridx = startSegment * 2;
-		add(left, gbc);
-		gbc.gridx = ((endSegment - 1) * 2)-1;
-		add(right, gbc);
-		
+		addLeftRight();
 		repaint();
 	}
 
 	public synchronized void moveEnd(int newend) {
+		int diff = endSegment-newend;
+		if(diff > 0) {
+			//newend<endSegment
+			for(int i = endSegment - 1; i >= newend; i--) {
+				parent.free(i);
+			}
+		} else if(diff < 0) {
+			//newend>endSegment
+			for(int i = endSegment; i < newend; i++) {
+				parent.claim(i);
+			}
+		}
 		endSegment = newend;
+		addLeftRight();
 		repaint();
 	}
 
@@ -242,6 +242,19 @@ public class Zone extends JPanel {
 		g.drawLine(x1, y, x2, y);
 		g.drawLine(x1, y1, x1, y2);
 		g.drawLine(x2, y1, x2, y2);
+		
+		width = getWidth();
+		height = getHeight();
+	}
+	
+	private void VALIDATE() {
+		validate();
+		repaint();
+		contentPane.validate();
+		contentPane.repaint();
+		left.repaint();
+		right.repaint();
+		
 	}
 
 }
