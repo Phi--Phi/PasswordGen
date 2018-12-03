@@ -43,12 +43,12 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	private static final long serialVersionUID = 0x4B6D15E09FEB1132L;
 	private RandomGeneratorOptionsGUI parent;
 	private Vector<ZoneSpec> specs = new Vector<ZoneSpec>();
-	private JPanel characters,zoneMadness;
+	private JPanel characters,zoneMadness,checkboxes;
 	private JButton AddZone, RemoveZone, GoBack;
 	private Vector<CharacterBox> boxes;
 
 	public PasswordGeneratorZoneGUI(RandomGeneratorOptionsGUI rgo) {
-		setMinimumSize(new Dimension(800, 400));
+		setMinimumSize(new Dimension(1050, 500));
 		specs = new Vector<ZoneSpec>();
 		boxes = new Vector<CharacterBox>();
 		initialize();
@@ -72,7 +72,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 				Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
-
+		
 		characters = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
 		gbc_panel_1.gridwidth = 10;
@@ -80,7 +80,18 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		gbc_panel_1.fill = GridBagConstraints.BOTH;
 		gbc_panel_1.gridy = gbc_panel_1.gridx = 1;
 		getContentPane().add(characters, gbc_panel_1);
-
+		
+		checkboxes = new JPanel();
+		checkboxes.setLayout(new BorderLayout());
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.gridwidth = 7;
+		gbc_panel.gridheight = 4;
+		gbc_panel.insets = new Insets(0, 0, 0, 5);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 1;
+		gbc_panel.gridy = 4;
+		getContentPane().add(checkboxes, gbc_panel);
+		
 		zoneMadness = new JPanel();
 		zoneMadness.setLayout(new BorderLayout());
 		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
@@ -144,14 +155,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		for(Iterator<ZoneSpec> i = specs.iterator(); i.hasNext();)
 			i.next().setVisible(false);
 		temp.setVisible(true);
-		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.gridwidth = 7;
-		gbc_panel.gridheight = 4;
-		gbc_panel.insets = new Insets(0, 0, 0, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
-		gbc_panel.gridx = 1;
-		gbc_panel.gridy = 4;
-		getContentPane().add(temp, gbc_panel);
+		checkboxes.add(temp, BorderLayout.CENTER);
 		zoneMadness.add(temp.getZone(), BorderLayout.CENTER);
 		specs.add(temp);
 		boxes.elementAt(startPos).setEditable(false);
@@ -181,6 +185,7 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		temp.getZone().setSize(parent.getNumberOfCharacters());
 		characters.removeAll();
 		zoneMadness.removeAll();
+		checkboxes.removeAll();
 		characters.setLayout(new GridLayout(1, parent.getNumberOfCharacters()));
 		
 		boxes.clear();
@@ -234,16 +239,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		specs.add(temp);
 		
 		for(int i = 0; i < specs.size(); ++i) {
-			GridBagConstraints gbc_panel = new GridBagConstraints();
-			gbc_panel.gridwidth = 7;
-			gbc_panel.gridheight = 4;
-			gbc_panel.insets = new Insets(0, 0, 0, 5);
-			gbc_panel.fill = GridBagConstraints.BOTH;
-			gbc_panel.gridx = 1;
-			gbc_panel.gridy = 4;
-			getContentPane().add(specs.elementAt(i), gbc_panel);
+			checkboxes.add(specs.elementAt(i), BorderLayout.CENTER);
 			zoneMadness.add(specs.elementAt(i).getZone(), BorderLayout.CENTER);
 		}
+		
 		RemoveZone.setEnabled(false);
 		AddZone.setEnabled(false);
 		GoBack.setEnabled(canGoBack());

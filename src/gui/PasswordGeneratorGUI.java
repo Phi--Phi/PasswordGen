@@ -160,7 +160,7 @@ public class PasswordGeneratorGUI extends JFrame {
 					alphabet.add('?');
 
 				}
-				for(int k = 0; k < z.getZone().getLength(); ++k)
+				for(int k = 0; k < z.getZone().getLength(); k++)
 					sb.append(alphabet.get(rand.nextInt(alphabet.size())));
 
 			}
