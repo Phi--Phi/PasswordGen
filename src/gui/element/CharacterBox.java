@@ -23,10 +23,8 @@ import javax.swing.JTextField;
 
 public class CharacterBox extends JTextField {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -188494454562309722L;
+	private static final long serialVersionUID = -0x29DAAB52E51465AL;
+	private boolean selected = false;
 
 	public CharacterBox() {
 		// textField used that sets the width of the textbox to three
@@ -40,21 +38,27 @@ public class CharacterBox extends JTextField {
 		    @Override
 		    public void keyPressed(KeyEvent evt) {
 		    	int e = evt.getKeyCode();
-		    	if (e == KeyEvent.VK_BACK_SPACE) {
-		    		setText("xx");
-		    	}
-		    	else if (e == KeyEvent.VK_DELETE || e == KeyEvent.VK_CONTROL || 
-		    			e == KeyEvent.VK_ALT || e == KeyEvent.VK_WINDOWS ||
-		    			e == KeyEvent.VK_NUM_LOCK || e == KeyEvent.VK_CAPS_LOCK ||
-		    			e == KeyEvent.VK_ESCAPE || e == KeyEvent.VK_ENTER ||
-		    			e == KeyEvent.VK_PAGE_DOWN || e == KeyEvent.VK_PAGE_UP || 
-		    			e == KeyEvent.VK_END || e == KeyEvent.VK_HOME || e == KeyEvent.VK_INSERT) {
-		    		setText("x");
-		    	}
-		    	else {
-		    		setText("");
-		    	}
+		    	setText(e == KeyEvent.VK_BACK_SPACE ? "xx"
+						: e == KeyEvent.VK_DELETE || e == KeyEvent.VK_CONTROL || e == KeyEvent.VK_ALT
+								|| e == KeyEvent.VK_WINDOWS || e == KeyEvent.VK_NUM_LOCK || e == KeyEvent.VK_CAPS_LOCK
+								|| e == KeyEvent.VK_ESCAPE || e == KeyEvent.VK_ENTER || e == KeyEvent.VK_PAGE_DOWN
+								|| e == KeyEvent.VK_PAGE_UP || e == KeyEvent.VK_END || e == KeyEvent.VK_HOME
+								|| e == KeyEvent.VK_INSERT ? "x" : "");
 		    }
-		}); 
+		});
 	}
+	
+	public boolean isSelected() {
+		return selected;
+	}
+	
+	public void deselect() {
+		selected = false;
+	}
+	
+	public void select() {
+		System.out.println("Selected!");
+		selected = true;
+	}
+	
 }

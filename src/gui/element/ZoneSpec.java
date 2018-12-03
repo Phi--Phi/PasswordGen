@@ -35,6 +35,11 @@ public class ZoneSpec extends JPanel {
 		z = new Zone(numChars, parent);
 	}
 	
+	public ZoneSpec(PasswordGeneratorZoneGUI parent, int numChars, int startPos, int endPos) {
+		setupOptions();
+		z = new Zone(numChars,startPos,endPos,parent);
+	}
+	
 	/**
 	 * this function sets up the options checkboxes
 	 */
