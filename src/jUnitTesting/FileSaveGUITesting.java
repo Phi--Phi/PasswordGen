@@ -1,19 +1,22 @@
 package jUnitTesting;
 
 import static org.junit.Assert.assertEquals;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
 import static org.junit.jupiter.api.Assertions.*;
+
 
 import org.junit.jupiter.api.Test;
 
 public class FileSaveGUITesting {
-
 	@Test
 	public void testEventListener() {
-	  ActionListener subjectUnderTest = new MyActionListener();
-	  ActionEvent mockEvent = mock(ActionEvent.class);
+	  FileSaveGUITesting subjectUnderTest = new FileSaveGUITesting();
+	  ActionEvent mockEvent = subjectUnderTest.actionPerformed(null);
 	
-	  subjectUnderTest.actionPerformed(mockEvent);
-		assertEquals(7, output);	//enter the expected outcome 
+	  assertEquals(7, mockEvent);	//enter the expected outcome 
 			
 	}
 }

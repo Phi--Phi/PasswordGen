@@ -109,8 +109,6 @@ public class PasswordGeneratorGUI extends JFrame {
 	 * This function will generate the passwords based on options.lowercase()
 	 * options.uppercase() options.numbers() options.specialCharacters
 	 * options.getNumberOfPasswords() options.getNumberOfCharacters
-	 * </p>
-	 * <p>
 	 * The generated password list is immediately displayed to the user
 	 * </p>
 	 * 
