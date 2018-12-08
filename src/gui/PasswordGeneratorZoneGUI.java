@@ -38,6 +38,11 @@ import javax.swing.JPanel;
 import gui.element.CharacterBox;
 import gui.element.ZoneSpec;
 
+/**
+ * This class is responsible for laying out and displaying all the advanced
+ * options to the user. Primarily, the zone setting feature.
+ * 
+ */
 public class PasswordGeneratorZoneGUI extends JFrame {
 
 	private static final long serialVersionUID = 0x4B6D15E09FEB1132L;
@@ -61,7 +66,9 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		setTitle("Advanced Options");
 		pack();
 	}
-
+	/**
+	 * This function sets up the complicated layout of the sections of the advanced options screen.
+	 */
 	private void initialize() {
 		setBounds(100, 100, 450, 300);
 
@@ -162,7 +169,11 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		boxes.elementAt(startPos).setText("x");
 		
 	}
-	
+	/**
+	 * 
+	 * @return the position of the CharacterBox that is selected.
+	 * The assumption is that only one CharacterBox can be selected at a time.
+	 */
 	private int getSelectedStart() {
 		int j = 0;
 		for(Iterator<CharacterBox> i = boxes.iterator(); i.hasNext();) {
@@ -175,8 +186,8 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	}
 	
 	/**
-	 * clears all zone configuration and resets it to one zone with lowercase
-	 * checked
+	 * Clears all zone configuration and resets it to the initial default state.
+	 * Is also used to setup the initial default state.
 	 */
 	public synchronized void resetZones() {
 		ZoneSpec temp = new ZoneSpec(this, parent.getNumberOfCharacters());
@@ -247,7 +258,13 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		AddZone.setEnabled(false);
 		GoBack.setEnabled(canGoBack());
 	}
-	
+	/**
+	 * This function calculates the maximum or minimum expansion frontier for a zone's
+	 * start or end position.
+	 * @param index the start of the scan.
+	 * @param direction the direction of the scan. If positive, scan indexes > index.
+	 * @return the position of the maximum/minimum expansion.
+	 */
 	public synchronized int scan(int index, int direction) {
 		if (direction <= 0) {
 			if (direction < 0)
@@ -270,7 +287,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 	public List<ZoneSpec> getZones() {
 		return specs;
 	}
-
+	/**
+	 * Disables input for the CharacterBox located at index i.
+	 * @param i the CharacterBox to disable.
+	 */
 	public synchronized void claim(int i) {
 		CharacterBox temp = boxes.elementAt(i);
 		temp.setEditable(false);
@@ -281,7 +301,10 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		
 		GoBack.setEnabled(canGoBack());
 	}
-
+	/**
+	 * Enables input for the CharacterBox located at index i.
+	 * @param i the CharacterBox to enable.
+	 */
 	public synchronized void free(int i) {
 		CharacterBox temp = boxes.elementAt(i);
 		temp.setEditable(true);
@@ -292,7 +315,11 @@ public class PasswordGeneratorZoneGUI extends JFrame {
 		GoBack.setEnabled(false);
 	}
 	
-	
+	/**
+	 * 
+	 * @return true if there are no errors with the options the user 
+	 * has currently selected.
+	 */
 	public synchronized boolean canGoBack() {
 		boolean canGoBack = true;
 		CharacterBox temp;

@@ -20,7 +20,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JTextField;
-
+/**
+ * This class is responsible for allowing the user to specify
+ * character values for non-zoned sections of the password.
+ *
+ */
 public class CharacterBox extends JTextField {
 	
 	private static final long serialVersionUID = -0x29DAAB52E51465AL;
@@ -57,7 +61,6 @@ public class CharacterBox extends JTextField {
 	}
 	
 	public void select() {
-		System.out.println("Selected!");
 		selected = true;
 	}
 	

@@ -21,6 +21,12 @@ import javax.swing.JPanel;
 
 import gui.PasswordGeneratorZoneGUI;
 
+/**
+ * This class is responsible for the alphabet option selection.
+ * It provides an interface for the generator to get the options
+ * from each zone.
+ *
+ */
 public class ZoneSpec extends JPanel {
 
 	/**
@@ -41,7 +47,7 @@ public class ZoneSpec extends JPanel {
 	}
 	
 	/**
-	 * this function sets up the options checkboxes
+	 * This function sets up the options checkboxes.
 	 */
 	private void setupOptions() {
 		

@@ -23,14 +23,18 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileFilter;
-
+/**
+ * This class is responsible for the file save screen. The
+ * user can select the file type, location, and name. This
+ * is accomplished by using the ActionListener interface.
+ */
 class FileSaveGUI implements ActionListener {
 
 	private PasswordGeneratorGUI parent;
 	public FileSaveGUI(PasswordGeneratorGUI parent) {
 		this.parent = parent;
 	}
-	
+	//all file types supported by the FileSaveGUI
 	private static final FileFilter txt = new FileNameExtensionFilter("Text File (*.txt)","txt"),
 			csv = new FileNameExtensionFilter("CSV File (*.csv)","csv");
 	
@@ -39,7 +43,6 @@ class FileSaveGUI implements ActionListener {
 		
 		JFileChooser chooser = new JFileChooser();
 		//set the default file type to .txt files
-		//chooser.setFileFilter(new FileNameExtensionFilter("Text File (*.txt)","txt"));
 		chooser.setFileFilter(csv);
 		chooser.setFileFilter(txt);
 		

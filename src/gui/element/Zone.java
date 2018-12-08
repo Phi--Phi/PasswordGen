@@ -32,10 +32,22 @@ import javax.swing.JPanel;
 
 import gui.PasswordGeneratorZoneGUI;
 
+/**
+ * 
+ * This class is responsible for the visualization of the Zone location. 
+ * It adds click-and-drag functionality to setting the Zone. This provides
+ * an interface for the start and end positions of the Zone.
+ */
 public class Zone extends JPanel {
 
 	private static final long serialVersionUID = -0x8C3F34BDF7C8B93L;
 
+	/**
+	 * This class is responsible enabling the click-and-drag for
+	 * the Zone. Each Zone has two JRectangles (one on each side)
+	 * that can be dragged to resize the Zone.
+	 *
+	 */
 	public class JRectangle extends JPanel implements MouseMotionListener, MouseListener {
 
 		private static final long serialVersionUID = 0x6F01D0429888F5FFL;
@@ -53,7 +65,10 @@ public class Zone extends JPanel {
 			addMouseListener(this);
 			z=p;
 		}
-		
+		/**
+		 * This overrides the getWidth function for the component.
+		 * The width of the JRectangle is now equal to the width of the Zone.
+		 */
 		public int getWidth() {
 			return z.getWidth();
 		}
@@ -130,7 +145,7 @@ public class Zone extends JPanel {
 			return direction;
 		}
 		
-	}
+	}//end of JRectangle
 
 	private volatile int totalSegments, startSegment, endSegment;
 	private PasswordGeneratorZoneGUI parent;
@@ -179,6 +194,11 @@ public class Zone extends JPanel {
 		addLeftRight();
 	}
 	
+	/**This function is for recalculating the layout for the two JRectangles.
+	 * Whenever the zone changes the start or end positions, this function is
+	 * called to move the corresponding JRectangles.
+	 * 
+	 */
 	public void addLeftRight() {
 		int outside, leftInset, rightInset;
 		JLabel label = new JLabel();
@@ -205,6 +225,11 @@ public class Zone extends JPanel {
 		
 	}
 	
+	/**
+	 * This function moves the start and unlocks/locks the corresponding
+	 * CharacterBoxes from the PasswordGeneratorZoneGUI.
+	 * @param newstart the new position to move the start to.
+	 */
 	public synchronized void moveStart(int newstart) {
 		int diff = startSegment-newstart;
 		if(diff > 0)
@@ -217,7 +242,11 @@ public class Zone extends JPanel {
 		addLeftRight();
 		repaint();
 	}
-
+	/**
+	 * This function moves the end and unlocks/locks the corresponding
+	 * CharacterBoxes from the PasswordGeneratorZoneGUI.
+	 * @param newend the new position to move the end to.
+	 */
 	public synchronized void moveEnd(int newend) {
 		int diff = endSegment-newend;
 		if(diff > 0)
@@ -230,11 +259,20 @@ public class Zone extends JPanel {
 		addLeftRight();
 		repaint();
 	}
-
+	
+	/**
+	 * 
+	 * @return the number of characters enclosed by this zone.
+	 */
 	public synchronized int getLength() {
 		return endSegment - startSegment;
 	}
 	
+	/**
+	 * Overrides the paint component function. This will draw the lines for the Zone
+	 * onto itself. The positioning is determined by the startSegment and endSegment
+	 * values.
+	 */
 	public void paint(Graphics g) {
 		super.paint(g);
 		int x1 = Math.round(startSegment * (float) getWidth() / totalSegments + getX()) + 1,
@@ -250,6 +288,12 @@ public class Zone extends JPanel {
 		height = getHeight();
 	}
 	
+	/**
+	 * This function "commits" the movement and repositioning of components in the layout.
+	 * When this function is called, the components (in the layout) are visually moved.
+	 * This allows for a logical movement before officially moving visually. This only
+	 * applies to components set in the layout manager.
+	 */
 	private void VALIDATE() {
 		addLeftRight();
 		validate();

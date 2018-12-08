@@ -22,8 +22,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -34,14 +34,21 @@ import javax.swing.JTextArea;
 import gui.element.ZoneSpec;
 import main.RandomGeneratorMain;
 
+/**
+ * This class is responsible for generating the passwords based on user
+ * selected options. It also displays those passwords to the user.
+ *
+ */
 public class PasswordGeneratorGUI extends JFrame {
 
 	private static final long serialVersionUID = -0x1404C4857C6E2B41L;
 
 	private JPanel panel;
+	private Collection<ZoneSpec> prev;
 	// visibility is set to package
 	JButton goBack, next, saveBtn;
 	JTextArea password;
+	
 
 	private RandomGeneratorOptionsGUI options;
 
@@ -50,6 +57,7 @@ public class PasswordGeneratorGUI extends JFrame {
 		Image icon = Toolkit.getDefaultToolkit().getImage("res/icon.png");
 		panel = new JPanel();
 		options = opt;
+		prev = null;
 		setVisible(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
@@ -88,7 +96,7 @@ public class PasswordGeneratorGUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//generate();
+				generate();
 
 			}
 
@@ -114,8 +122,8 @@ public class PasswordGeneratorGUI extends JFrame {
 	 * 
 	 * @param ss
 	 */
-	public synchronized void generate(List<ZoneSpec> ss) {
-
+	public synchronized void generate(Collection<ZoneSpec> ss) {
+		prev = ss;
 		ArrayList<Character> alphabet = new ArrayList<Character>();
 		Random rand = new Random();
 		StringBuilder sb = new StringBuilder();
@@ -168,6 +176,10 @@ public class PasswordGeneratorGUI extends JFrame {
 		setVisible(true);
 		pack();
 
+	}
+	
+	private synchronized void generate() {
+		generate(prev);
 	}
 
 }
