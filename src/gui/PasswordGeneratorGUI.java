@@ -19,8 +19,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -42,9 +40,10 @@ import main.RandomGeneratorMain;
 public class PasswordGeneratorGUI extends JFrame {
 
 	private static final long serialVersionUID = -0x1404C4857C6E2B41L;
-
+	
 	private JPanel panel;
 	private Collection<ZoneSpec> prev;
+	private Random rand = new Random();
 	// visibility is set to package
 	JButton goBack, next, saveBtn;
 	JTextArea password;
@@ -78,29 +77,16 @@ public class PasswordGeneratorGUI extends JFrame {
 		password = new JTextArea();
 		saveBtn = new JButton("Save");
 		password.setEditable(false);
-		goBack.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				setVisible(false);
-				pack();
-				options.setVisible(true);
-
-			}
+		goBack.addActionListener(e -> {
+			setVisible(false);
+			pack();
+			options.setVisible(true);
 
 		});
 
 		saveBtn.addActionListener(new FileSaveGUI(this));
 
-		next.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				generate();
-
-			}
-
-		});
+		next.addActionListener(e -> generate());
 
 		buttons.setLayout(new BorderLayout());
 		buttons.add(goBack, BorderLayout.WEST);
@@ -124,8 +110,7 @@ public class PasswordGeneratorGUI extends JFrame {
 	 */
 	public synchronized void generate(Collection<ZoneSpec> ss) {
 		prev = ss;
-		ArrayList<Character> alphabet = new ArrayList<Character>();
-		Random rand = new Random();
+		ArrayList<Character> alphabet = new ArrayList<>();
 		StringBuilder sb = new StringBuilder();
 		ZoneSpec z;
 

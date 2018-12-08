@@ -36,11 +36,6 @@ public class ZoneSpec extends JPanel {
 	private JCheckBox lower, upper, number, special;
 	private Zone z;
 	
-	public ZoneSpec(PasswordGeneratorZoneGUI parent, int numChars) {
-		setupOptions();
-		z = new Zone(numChars, parent);
-	}
-	
 	public ZoneSpec(PasswordGeneratorZoneGUI parent, int numChars, int startPos, int endPos) {
 		setupOptions();
 		z = new Zone(numChars,startPos,endPos,parent);
@@ -76,9 +71,7 @@ public class ZoneSpec extends JPanel {
 	 * and FALSE otherwise
 	 */
 	public boolean lowercase() {
-		
 		return lower.isSelected();
-		
 	}
 	
 	/**
@@ -87,9 +80,7 @@ public class ZoneSpec extends JPanel {
 	 * and FALSE otherwise
 	 */
 	public boolean uppercase() {
-		
 		return upper.isSelected();
-		
 	}
 	
 	/**
@@ -98,9 +89,7 @@ public class ZoneSpec extends JPanel {
 	 * option, and FALSE otherwise
 	 */
 	public boolean specialCharacters() {
-		
 		return special.isSelected();
-		
 	}
 	
 	/**
@@ -109,9 +98,7 @@ public class ZoneSpec extends JPanel {
 	 * and FALSE otherwise
 	 */
 	public boolean numbers() {
-		
 		return number.isSelected();
-		
 	}
 	
 	public synchronized void moveStart (int newstart) {

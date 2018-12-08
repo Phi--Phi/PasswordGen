@@ -21,8 +21,6 @@ import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -95,24 +93,14 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 		
 		advancedOpt = new JButton("Advanced Options");
 		submit 		= new JButton("Generate");
-		submit.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				generate(zonegui.getZones());
-
-			}
-
+		submit.addActionListener(e -> {
+			setVisible(false);
+			generate(zonegui.getZones());
 		});
-		advancedOpt.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-				zonegui.resetZones();
-				zonegui.setVisible(true);
-			}
+		advancedOpt.addActionListener(e -> {
+			setVisible(false);
+			zonegui.resetZones();
+			zonegui.setVisible(true);
 		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		numberOfChars.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -137,36 +125,25 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 		characters = new JTextArea();
 		increment = new JButton("+");
-		increment.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				/**
-				 * on click for increment
-				 */
-				try {
-					incrementChars();
-				} catch (LengthOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(increment, "Enter a number between 6 and 30");
-				}
-
+		increment.addActionListener(event -> {
+			/**
+			 * on click for increment
+			 */
+			try {
+				incrementChars();
+			} catch (LengthOutOfBoundsException exception) {
+				JOptionPane.showMessageDialog(increment, "Enter a number between 6 and 30");
 			}
-
 		});
 		decrement = new JButton("-");
-		decrement.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				/**
-				 * on click for decrement
-				 */
-				try {
-					decrementChars();
-				} catch (LengthOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(decrement, "Enter a number between 6 and 30");
-				}
-
+		decrement.addActionListener(e -> {
+			/**
+			 * on click for decrement
+			 */
+			try {
+				decrementChars();
+			} catch (LengthOutOfBoundsException exception) {
+				JOptionPane.showMessageDialog(decrement, "Enter a number between 6 and 30");
 			}
 		});
 		updateCharacters();
@@ -192,34 +169,26 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 
 		passwords = new JTextArea();
 		increment = new JButton("+");
-		increment.addActionListener(new ActionListener() {
+		increment.addActionListener(e -> {
 			/**
 			 * on click for increment
 			 */
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					incrementPasses();
-				} catch (NumberOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(increment, "Enter a number between 1 and 100");
-				}
-
+			try {
+				incrementPasses();
+			} catch (NumberOutOfBoundsException exception) {
+				JOptionPane.showMessageDialog(increment, "Enter a number between 1 and 100");
 			}
 
-		});
+			});
 		decrement = new JButton("-");
-		decrement.addActionListener(new ActionListener() {
+		decrement.addActionListener(e -> {
 			/**
 			 * on click for decrement
 			 */
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					decrementPasses();
-				} catch (NumberOutOfBoundsException e) {
-					JOptionPane.showMessageDialog(decrement, "Enter a number between 1 and 100");
-				}
-
+			try {
+				decrementPasses();
+			} catch (NumberOutOfBoundsException exception) {
+				JOptionPane.showMessageDialog(decrement, "Enter a number between 1 and 100");
 			}
 		});
 		updatePasswords();
@@ -326,9 +295,7 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	 * will update that change to the user.
 	 */
 	private void updateCharacters() {
-
 		characters.setText(String.valueOf(chars));
-
 	}
 
 	/**
@@ -336,9 +303,7 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	 * will update that change to the user.
 	 */
 	private void updatePasswords() {
-
 		passwords.setText(String.valueOf(passes));
-
 	}
 
 	/**
@@ -346,9 +311,7 @@ public class RandomGeneratorOptionsGUI extends JFrame {
 	 * @return The number of characters in the password length
 	 */
 	public int getNumberOfCharacters() {
-
 		return chars;
-
 	}
 
 	/**
